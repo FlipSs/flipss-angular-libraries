@@ -1,0 +1,13 @@
+{
+  "name": "component-router",
+  "version": "0.0.1",
+  "dependencies": {
+    "tslib": "^1.9.3"
+  },
+  "peerDependencies": {
+    "flipss-common-types": "^1.0.18",
+    "@angular/router": "^7.2.14",
+    "@angular/common": "^7.2.14",
+    "@angular/core": "^7.2.14"
+  }
+}
