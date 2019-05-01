@@ -68,9 +68,9 @@ export class AppInitializer implements IAppInitializer {
     return Promise.resolve();
   }
 
-  private initializeTypeAsync(type: Type<IInitializable> | InjectionToken<IInitializable>): Promise<void> {
+  private async initializeTypeAsync(type: Type<IInitializable> | InjectionToken<IInitializable>): Promise<void> {
     try {
-      return this.injector.get(type).initializeAsync();
+      await this.injector.get(type).initializeAsync();
     } catch (e) {
       if (this.errorListener) {
         this.errorListener.onTypeInitializationError(e, type);
