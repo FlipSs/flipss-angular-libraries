@@ -1,6 +1,6 @@
 {
   "name": "flipss-app-initializer",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Provides service that initializes required components before app start",
   "scripts": {
     "npm-publish": "ng test app-initializer --watch=false && npm version patch && ng build app-initializer && cd ../../dist/app-initializer && npm publish"
@@ -27,5 +27,8 @@
     "flipss-common-types": "^1.0.19",
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0"
+  },
+  "devDependencies": {
+    "flipss-common-types": "^1.0.19"
   }
 }

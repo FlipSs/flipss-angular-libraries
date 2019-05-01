@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "npm-publish-component-router": "cd projects/component-router && npm run npm-publish"
+    "npm-publish-component-router": "cd projects/component-router && npm run npm-publish",
+    "npm-publish-app-initializer": "cd projects/app-initializer && npm run npm-publish"
   },
   "private": true,
   "dependencies": {
