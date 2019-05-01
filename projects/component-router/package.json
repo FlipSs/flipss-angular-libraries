@@ -1,5 +1,5 @@
 {
-  "name": "component-router",
+  "name": "flipss-component-router",
   "version": "0.0.1",
   "description": "Provides service that help avoid using of 'raw' routes",
   "scripts": {
