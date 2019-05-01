@@ -1,4 +1,4 @@
-import {APP_INITIALIZER as ANGULAR_APP_INITIALIZER, ModuleWithProviders, NgModule, Type} from '@angular/core';
+import {APP_INITIALIZER as ANGULAR_APP_INITIALIZER, ModuleWithProviders, NgModule, Provider, Type} from '@angular/core';
 import {INITIALIZABLE_TYPES} from '../internal/InitializableTypes';
 import {APP_INITIALIZER, IAppInitializer} from '../models/IAppInitializer';
 import {AppInitializer} from '../services/AppInitializer';
@@ -28,15 +28,20 @@ export class AppInitializerModule {
   }
 
   public static forRoot(types: IInitializableType[],
-                        appInitializer?: Type<AppInitializer>,
-                        errorListener?: Type<IAppInitializerErrorListener>): ModuleWithProviders<AppInitializerModule> {
+                        errorListener?: Type<IAppInitializerErrorListener>,
+                        appInitializer?: Type<AppInitializer>): ModuleWithProviders<AppInitializerModule> {
+    const providers: Provider[] = [
+      {provide: INITIALIZABLE_TYPES, useValue: types},
+      {provide: APP_INITIALIZER, useClass: appInitializer || AppInitializer}
+    ];
+
+    if (errorListener) {
+      providers.push({provide: APP_INITIALIZER_ERROR_LISTENER, useClass: errorListener});
+    }
+
     return {
       ngModule: AppInitializerModule,
-      providers: [
-        {provide: INITIALIZABLE_TYPES, useValue: types},
-        {provide: APP_INITIALIZER, useClass: appInitializer || AppInitializer},
-        {provide: APP_INITIALIZER_ERROR_LISTENER, useClass: errorListener}
-      ]
+      providers
     };
   }
 }

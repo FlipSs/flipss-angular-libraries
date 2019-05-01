@@ -23,7 +23,7 @@ export class AppInitializer implements IAppInitializer {
   }
 
   public async initializeAppAsync(): Promise<void> {
-    let currentStage = AppInitializationStage.none;
+    let currentStage: AppInitializationStage;
     try {
       const initializeStageAsync: Func<AppInitializationStage, Promise<void>> = async (initializationStage: AppInitializationStage) => {
         currentStage = initializationStage;
@@ -44,6 +44,7 @@ export class AppInitializer implements IAppInitializer {
       await initializeStageAsync(AppInitializationStage.postInitialization);
     } catch (e) {
       if (this.errorListener) {
+        // noinspection JSUnusedAssignment
         this.errorListener.onAppInitializationError(e, currentStage);
       }
     }

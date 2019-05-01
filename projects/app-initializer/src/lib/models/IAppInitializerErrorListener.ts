@@ -5,5 +5,5 @@ import {IInitializable} from './IInitializable';
 export interface IAppInitializerErrorListener {
   onTypeInitializationError(error: Error, type: Type<IInitializable> | InjectionToken<IInitializable>): void;
 
-  onAppInitializationError(error: Error, stage: AppInitializationStage): void;
+  onAppInitializationError(error: Error, stage?: AppInitializationStage): void;
 }
