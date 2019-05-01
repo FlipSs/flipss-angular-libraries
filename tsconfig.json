@@ -24,6 +24,12 @@
       ],
       "component-router/*": [
         "dist/component-router/*"
+      ],
+      "app-initializer": [
+        "dist/app-initializer"
+      ],
+      "app-initializer/*": [
+        "dist/app-initializer/*"
       ]
     }
   }

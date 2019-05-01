@@ -169,6 +169,41 @@
           }
         }
       }
+    },
+    "app-initializer": {
+      "root": "projects/app-initializer",
+      "sourceRoot": "projects/app-initializer/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/app-initializer/tsconfig.lib.json",
+            "project": "projects/app-initializer/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/app-initializer/src/test.ts",
+            "tsConfig": "projects/app-initializer/tsconfig.spec.json",
+            "karmaConfig": "projects/app-initializer/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/app-initializer/tsconfig.lib.json",
+              "projects/app-initializer/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flipss-angular-libraries"
