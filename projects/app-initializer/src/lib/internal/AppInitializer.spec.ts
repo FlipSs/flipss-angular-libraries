@@ -27,37 +27,51 @@ describe('AppInitializer', () => {
     {type: type4Token, initializationStage: AppInitializationStage.initialization}
   ];
 
+  function checkTypeInitializationOrder(getInitializationAction: Func<IAppInitializer, Promise<void>>): void {
+    it('Types should initialize in correct order', async () => {
+      const typeSpies = getTypes().sort((t1, t2) => t1.initializationStage - t2.initializationStage)
+        .map(t => spyOn(TestBed.get(t.type), 'initializeAsync'));
+
+      await getInitializationAction(getAppInitializer());
+
+      if (typeSpies.length > 1) {
+        let previousSpy = typeSpies[0];
+        for (let i = 1; i < typeSpies.length; i++) {
+          const currentSpy = typeSpies[i];
+          expect(previousSpy).toHaveBeenCalledBefore(currentSpy);
+          previousSpy = currentSpy;
+        }
+      } else if (typeSpies.length === 1) {
+        expect(typeSpies[0]).toHaveBeenCalled();
+      }
+    });
+  }
+
   function getAppInitializer(): IAppInitializer {
     return TestBed.get(APP_INITIALIZER);
   }
 
-  function checkTypeInitializationOrder(): void {
-    const orderedTypes = getTypes().sort((t1, t2) => t1.initializationStage - t2.initializationStage);
+  function waitForAppInitialization(): Promise<void> {
+    getAppInitializer();
 
-    for (let i = 0; i < orderedTypes.length; i++) {
-      const type = orderedTypes[i];
-      const typeInstance: Type1 = TestBed.get(type.type);
-
-      expect(typeInstance.initialized).toBeTruthy();
-      expect(typeInstance.index).toEqual(i);
-    }
+    return new Promise(resolve => {
+      setTimeout(() => resolve(), 1000);
+    });
   }
 
   describe('Type initialization', () => {
-    beforeEach(() => {
-      Type1.resetIndex();
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         providers: getTypeProviders(),
         imports: [
           AppInitializerModule.forRoot(getTypes())
         ]
       });
+
+      await waitForAppInitialization();
     });
 
-    it('Types should initialize in correct order', async () => {
-      await getAppInitializer().initializeAppTypesAsync();
-      checkTypeInitializationOrder();
-    });
+    checkTypeInitializationOrder(a => a.initializeAppTypesAsync());
 
     it('Should call error listener on type initialization error', async () => {
       const spy = spyOn(TestBed.get(APP_INITIALIZER_ERROR_LISTENER), 'onTypeInitializationError');
@@ -68,8 +82,7 @@ describe('AppInitializer', () => {
   });
 
   describe('App initialization', () => {
-    beforeEach(() => {
-      Type1.resetIndex();
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         providers: getTypeProviders(),
         imports: [
@@ -78,12 +91,11 @@ describe('AppInitializer', () => {
           ])
         ]
       });
+
+      await waitForAppInitialization();
     });
 
-    it('Types should initialize in correct order', async () => {
-      await getAppInitializer().initializeAppAsync();
-      checkTypeInitializationOrder();
-    });
+    checkTypeInitializationOrder(a => a.initializeAppAsync());
 
     it('Should call stage listener methods', async () => {
       const stageListener: IAppInitializationStageListener = TestBed.get(APP_INITIALIZATION_STAGE_LISTENER)[0];
@@ -94,6 +106,7 @@ describe('AppInitializer', () => {
 
       await getAppInitializer().initializeAppAsync();
 
+      expect(onTypeInitSpy).toHaveBeenCalledTimes(getTypes().filter(t => t.initializationStage === TestStageListener.stage).length);
       expect(type1InitSpy).toHaveBeenCalledBefore(beforeInitSpy);
       expect(beforeInitSpy).toHaveBeenCalledBefore(onTypeInitSpy);
       expect(onTypeInitSpy).toHaveBeenCalledBefore(afterInitSpy);
@@ -102,8 +115,7 @@ describe('AppInitializer', () => {
   });
 
   describe('App initialization errors', () => {
-    beforeEach(() => {
-      Type1.resetIndex();
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         providers: getTypeProviders(),
         imports: [
@@ -112,6 +124,8 @@ describe('AppInitializer', () => {
           ])
         ]
       });
+
+      await waitForAppInitialization();
     });
 
     it('Should call error listener', async () => {
@@ -122,24 +136,11 @@ describe('AppInitializer', () => {
       expect(spy).toHaveBeenCalledWith(TestStageListenerWithError.error, TestStageListener.stage);
     });
   });
-});
+})
+;
 
 class Type1 implements IInitializable {
-  private static initializationIndex = -1;
-  public initialized: boolean;
-  public readonly index: number;
-
-  public constructor() {
-    this.index = ++Type1.initializationIndex;
-  }
-
-  public static resetIndex(): void {
-    this.initializationIndex = -1;
-  }
-
   public initializeAsync(): Promise<void> {
-    this.initialized = true;
-
     return Promise.resolve();
   }
 }
