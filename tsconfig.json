@@ -30,6 +30,12 @@
       ],
       "app-initializer/*": [
         "dist/app-initializer/*"
+      ],
+      "api-service": [
+        "dist/api-service"
+      ],
+      "api-service/*": [
+        "dist/api-service/*"
       ]
     }
   }

@@ -1,0 +1,35 @@
+{
+  "name": "flipss-api-service",
+  "version": "0.0.0",
+  "description": "Provides base models for api services",
+  "scripts": {
+    "npm-publish": "ng test api-service --watch=false && npm version patch && ng build api-service && cd ../../dist/api-service && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlipSs/flipss-angular-libraries.git"
+  },
+  "author": "Pavel Eroshkin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlipSs/flipss-angular-libraries/issues"
+  },
+  "homepage": "https://github.com/FlipSs/flipss-angular-libraries/tree/master/projects/api-service#readme",
+  "keywords": [
+    "flipss",
+    "angular",
+    "api"
+  ],
+  "dependencies": {
+    "tslib": "^1.9.3"
+  },
+  "peerDependencies": {
+    "flipss-common-types": "^1.0.20",
+    "@angular/common": "^7.2.0",
+    "@angular/http": "^7.2.0",
+    "@angular/core": "^7.2.0"
+  },
+  "devDependencies": {
+    "flipss-common-types": "^1.0.21"
+  }
+}
