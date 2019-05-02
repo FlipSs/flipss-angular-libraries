@@ -1,6 +1,6 @@
 {
   "name": "flipss-api-service",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Provides base models for api services",
   "scripts": {
     "npm-publish": "ng test api-service --watch=false && npm version patch && ng build api-service && cd ../../dist/api-service && npm publish"
