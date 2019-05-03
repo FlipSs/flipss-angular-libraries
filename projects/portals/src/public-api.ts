@@ -9,7 +9,9 @@ export * from './lib/components/AlertComponent';
 export * from './lib/models/IAlertService';
 export * from './lib/models/ILoadingService';
 
+// modules
+export * from './lib/modules/AlertServiceModule';
+export * from './lib/modules/LoadingServiceModule';
+
 // services
-export * from './lib/services/AlertService';
 export * from './lib/services/LoadingService';
-export * from './lib/services/PortalService';

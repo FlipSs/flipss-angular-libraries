@@ -1,4 +1,4 @@
-import {PortalService} from './PortalService';
+import {PortalService} from '../internal/PortalService';
 import {ILoadingService} from '../models/ILoadingService';
 import {ApplicationRef, ComponentFactoryResolver, Injector} from '@angular/core';
 import {Lazy} from 'flipss-common-types/utils';
@@ -17,14 +17,18 @@ export abstract class LoadingService<TComponent> extends PortalService implement
     this.portal = new Lazy<ComponentPortal<TComponent>>(() => this.createPortal());
   }
 
-  public showUntil(promise: Promise<void>): Promise<void> {
+  public showUntil(promise: Promise<void>): void {
+    if (!promise) {
+      return;
+    }
+
     if (!this.hasAttached()) {
       this.attach(this.portal.value);
     }
 
     this.shownCount++;
 
-    return promise.finally(() => this.hide());
+    promise.finally(() => this.hide());
   }
 
   protected abstract createPortal(): ComponentPortal<TComponent>;
