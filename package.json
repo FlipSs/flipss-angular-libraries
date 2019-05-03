@@ -10,7 +10,8 @@
     "e2e": "ng e2e",
     "npm-publish-component-router": "cd projects/component-router && npm run npm-publish",
     "npm-publish-api-service": "cd projects/api-service && npm run npm-publish",
-    "npm-publish-app-initializer": "cd projects/app-initializer && npm run npm-publish"
+    "npm-publish-app-initializer": "cd projects/app-initializer && npm run npm-publish",
+    "npm-publish-portals": "cd projects/portals && npm run npm-publish"
   },
   "private": true,
   "dependencies": {

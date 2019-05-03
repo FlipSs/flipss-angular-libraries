@@ -36,6 +36,12 @@
       ],
       "api-service/*": [
         "dist/api-service/*"
+      ],
+      "portals": [
+        "dist/portals"
+      ],
+      "portals/*": [
+        "dist/portals/*"
       ]
     }
   }
