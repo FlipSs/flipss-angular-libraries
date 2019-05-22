@@ -1,6 +1,6 @@
-import {ComponentPortal, DomPortalHost} from '@angular/cdk/portal';
 import {ApplicationRef, ComponentFactoryResolver, Injector} from '@angular/core';
-import {Argument} from 'flipss-common-types/utils';
+import {Argument} from "flipss-common-types/utils";
+import {ComponentPortal, DomPortalHost} from "@angular/cdk/portal";
 
 export abstract class PortalService {
   private readonly host: DomPortalHost;

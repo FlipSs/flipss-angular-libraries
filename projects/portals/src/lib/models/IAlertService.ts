@@ -7,3 +7,6 @@ export interface IAlertService {
 }
 
 export const ALERT_SERVICE = new InjectionToken<IAlertService>('IAlertService');
+
+export const ALERT_DATA = new InjectionToken<any>('AlertData');
+

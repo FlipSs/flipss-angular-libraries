@@ -1,5 +1,5 @@
-import {ApplicationRef, ComponentFactoryResolver, Injectable, InjectionToken, Injector} from '@angular/core';
-import {IAlertService} from '../models/IAlertService';
+import {ApplicationRef, ComponentFactoryResolver, Injectable, Injector} from '@angular/core';
+import {ALERT_DATA, IAlertService} from '../models/IAlertService';
 import {AlertComponent} from '../components/AlertComponent';
 import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
 import {PortalService} from './PortalService';
@@ -62,5 +62,3 @@ export class AlertService extends PortalService implements IAlertService {
     return null;
   }
 }
-
-export const ALERT_DATA = new InjectionToken<any>('AlertData');

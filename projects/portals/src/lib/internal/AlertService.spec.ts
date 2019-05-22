@@ -2,8 +2,7 @@ import {AlertComponent} from '../components/AlertComponent';
 import {Component, Inject, Optional} from '@angular/core';
 import {async, TestBed} from '@angular/core/testing';
 import {AlertServiceModule} from '../modules/AlertServiceModule';
-import {ALERT_SERVICE, IAlertService} from '../models/IAlertService';
-import {ALERT_DATA} from './AlertService';
+import {ALERT_DATA, ALERT_SERVICE, IAlertService} from '../models/IAlertService';
 
 describe('AlertService', () => {
   function isFirstShown(): boolean {
