@@ -40,13 +40,13 @@ export class AppInitializerModule {
     ];
 
     if (stageListeners && stageListeners.length > 0) {
-      providers.push(stageListeners.map<Provider>(l => {
-        return {
+      for (const listener of stageListeners) {
+        providers.push({
           provide: APP_INITIALIZATION_STAGE_LISTENER,
-          useClass: l,
+          useClass: listener,
           multi: true
-        };
-      }));
+        });
+      }
     }
 
     return {
