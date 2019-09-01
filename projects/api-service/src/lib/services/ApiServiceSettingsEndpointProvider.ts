@@ -1,19 +1,17 @@
 import {IApiServiceEndpointProviderSettings} from '../models/IApiServiceEndpointProviderSettings';
-import {ISettingObject} from 'flipss-common-types/settings';
+import {Argument, ISettingObject, IValueObserver, Lazy} from 'flipss-common-types';
 import {IApiServiceEndpointProvider} from '../models/IApiServiceEndpointProvider';
-import {Argument, Lazy} from 'flipss-common-types/utils';
 
-export abstract class ApiServiceEndpointProvider<TSettings extends IApiServiceEndpointProviderSettings>
-  implements IApiServiceEndpointProvider {
+export abstract class ApiServiceSettingsEndpointProvider<TSettings extends IApiServiceEndpointProviderSettings>
+  implements IValueObserver<TSettings>, IApiServiceEndpointProvider {
   private readonly currentEndpoint: Lazy<string>;
 
   protected constructor(private readonly settings: ISettingObject<TSettings>) {
-    Argument.isNotNullOrUndefined(settings, 'Settings');
+    Argument.isNotNullOrUndefined(settings, 'settings');
 
     this.currentEndpoint = new Lazy<string>(() => this.selectEndpoint(this.endpoints));
-    if (settings.valueUpdated) {
-      settings.valueUpdated.subscribe(() => this.currentEndpoint.reset());
-    }
+
+    settings.subscribe(this);
   }
 
   private get endpoints(): string[] {
@@ -26,9 +24,13 @@ export abstract class ApiServiceEndpointProvider<TSettings extends IApiServiceEn
     return this.currentEndpoint.value;
   }
 
+  public onNext(value: Readonly<TSettings>): void {
+    this.currentEndpoint.reset();
+  }
+
   protected getSettings(): TSettings {
     return this.settings.value;
   }
 
-  protected abstract selectEndpoint(endpoints: string[]);
+  protected abstract selectEndpoint(endpoints: string[]): string;
 }

@@ -4,7 +4,7 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {async, TestBed} from '@angular/core/testing';
 import {LoadingServiceModule} from '../modules/LoadingServiceModule';
 import {ILoadingService, LOADING_SERVICE} from '../models/ILoadingService';
-import {Action} from 'flipss-common-types/types';
+import {Action} from 'flipss-common-types';
 
 describe('LoadingService', () => {
   let loadingService: ILoadingService;

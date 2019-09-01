@@ -1,73 +1,85 @@
 import {Injectable, NgZone} from '@angular/core';
-import {Route, RouteConfigLoadEnd, Router, Routes} from '@angular/router';
+import {Params, RouteConfigLoadEnd, Router, Routes} from '@angular/router';
 import {IComponentRouter} from '../models/IComponentRouter';
 import {IComponentRoute} from '../internal/IComponentRoute';
 import {ComponentRoute} from '../internal/ComponentRoute';
-import {Argument} from 'flipss-common-types/utils';
-import {Component} from '../types/Component';
+import {Argument, Dictionary, IReadOnlyDictionary, TypeConstructor, TypeUtils} from 'flipss-common-types';
 
 @Injectable()
 export class ComponentRouter implements IComponentRouter {
-  private routeMap: Map<Component<any>, IComponentRoute>;
+  private routes: IReadOnlyDictionary<TypeConstructor<any>, IComponentRoute>;
 
   public constructor(private readonly router: Router,
                      private readonly ngZone: NgZone) {
-    Argument.isNotNullOrUndefined(router, 'Router');
-    Argument.isNotNullOrUndefined(ngZone, 'NgZone');
+    Argument.isNotNullOrUndefined(router, 'router');
+    Argument.isNotNullOrUndefined(ngZone, 'ngZone');
 
-    this.updateRouteMap();
+    this.updateRoutes();
     this.router.events.subscribe(event => {
-      if (event instanceof RouteConfigLoadEnd) {
-        this.updateRouteMap();
+      if (TypeUtils.is(event, RouteConfigLoadEnd)) {
+        this.updateRoutes();
       }
     });
   }
 
-  private static getRouteMap(routes: Routes,
-                             parentRoutePaths: string[] = []): Map<Component<any>, IComponentRoute> {
-    const result: Map<Component<any>, IComponentRoute> = new Map<Component<any>, IComponentRoute>();
+  private static getRoutes(routes: Routes,
+                           parentRoutePaths: string[] = []): IReadOnlyDictionary<TypeConstructor<any>, IComponentRoute> {
+    const result = new Dictionary<TypeConstructor<any>, IComponentRoute>();
 
-    if (!routes) {
+    if (TypeUtils.isNullOrUndefined(routes)) {
       return result;
     }
 
-    routes.forEach((route: Route) => {
-      if (route.path == null || route.component == null) {
-        return;
+    for (const route of routes) {
+      if (TypeUtils.isNullOrUndefined(route.path) || TypeUtils.isNullOrUndefined(route.component)) {
+        continue;
       }
-
-      const urlParts = parentRoutePaths.concat(route.path);
 
       result.set(route.component, new ComponentRoute(route, parentRoutePaths));
 
-      if (route.children && route.children.length > 0) {
-        this.getRouteMap(route.children, urlParts)
-          .forEach((v, k) => {
-            result.set(k, v);
-          });
+      if (!TypeUtils.isNullOrUndefined(route.children) && route.children.length > 0) {
+        const childRoutes = ComponentRouter.getRoutes(route.children, [...parentRoutePaths, route.path]);
+
+        for (const childRoute of childRoutes) {
+          result.set(childRoute.key, childRoute.value);
+        }
       }
-    });
+    }
 
     return result;
   }
 
-  public navigateToAsync(target: Component<any>, args?: string[]): Promise<boolean> {
-    Argument.isNotNullOrUndefined(target, 'TargetComponent');
+  public navigateToAsync(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): Promise<boolean> {
+    Argument.isNotNullOrUndefined(target, 'target');
 
-    if (!this.routeMap.has(target)) {
-      throw new Error(`Route for component: ${target.name} is not registered`);
-    }
+    const url = this.getUrl(target, routeParams, queryParams);
 
-    const route = this.routeMap.get(target);
-
-    return this.ngZone.run(() => {
-      const urlCommands = route.getRouteCommands(args);
-
-      return this.router.navigate(urlCommands);
-    });
+    return this.ngZone.run(() => this.router.navigateByUrl(url));
   }
 
-  private updateRouteMap(): void {
-    this.routeMap = ComponentRouter.getRouteMap(this.router.config);
+  public getUrlFor(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): string {
+    Argument.isNotNullOrUndefined(target, 'target');
+
+    return this.getUrl(target, routeParams, queryParams);
+  }
+
+  private getUrl(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): string {
+    this.ensureTargetRegistered(target);
+
+    const route = this.routes.get(target);
+
+    return this.router.createUrlTree(route.getRouteCommands(routeParams), {
+      queryParams
+    }).toString();
+  }
+
+  private ensureTargetRegistered(target: TypeConstructor<any>): void {
+    if (!this.routes.containsKey(target)) {
+      throw new Error(`Route for component: ${target.name} is not registered`);
+    }
+  }
+
+  private updateRoutes(): void {
+    this.routes = ComponentRouter.getRoutes(this.router.config);
   }
 }

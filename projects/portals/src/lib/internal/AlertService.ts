@@ -3,7 +3,7 @@ import {ALERT_DATA, IAlertService} from '../models/IAlertService';
 import {AlertComponent} from '../components/AlertComponent';
 import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
 import {PortalService} from './PortalService';
-import {Action} from 'flipss-common-types/types';
+import {Action} from 'flipss-common-types';
 
 @Injectable()
 export class AlertService extends PortalService implements IAlertService {

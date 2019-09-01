@@ -1,9 +1,8 @@
-import {ApiServiceEndpointProvider} from './ApiServiceEndpointProvider';
+import {ApiServiceSettingsEndpointProvider} from './ApiServiceSettingsEndpointProvider';
 import {IApiServiceEndpointProviderSettings} from '../models/IApiServiceEndpointProviderSettings';
-import {ISettingObject} from 'flipss-common-types/settings';
-import {Subject} from 'rxjs';
+import {ISettingObject, Observable} from 'flipss-common-types';
 
-describe('ApiServiceEndpointProvider', () => {
+describe('ApiServiceSettingsEndpointProvider', () => {
   it('Should change value on settings update', () => {
     const endpoints = ['one', 'two'];
     const settingObject = new TestEndpointProviderSettingObject(Array.from(endpoints));
@@ -15,12 +14,12 @@ describe('ApiServiceEndpointProvider', () => {
   });
 });
 
-class TestEndpointProviderSettingObject implements ISettingObject<IApiServiceEndpointProviderSettings> {
-  public readonly valueUpdated: Subject<void>;
+class TestEndpointProviderSettingObject extends Observable<IApiServiceEndpointProviderSettings>
+  implements ISettingObject<IApiServiceEndpointProviderSettings> {
   private currentValue: IApiServiceEndpointProviderSettings;
 
   public constructor(private readonly values: string[]) {
-    this.valueUpdated = new Subject<void>();
+    super();
     this.updateValue();
   }
 
@@ -33,11 +32,11 @@ class TestEndpointProviderSettingObject implements ISettingObject<IApiServiceEnd
       endpoints: [this.values.shift()]
     };
 
-    this.valueUpdated.next();
+    this.next(this.currentValue);
   }
 }
 
-class TestEndpointProvider extends ApiServiceEndpointProvider<IApiServiceEndpointProviderSettings> {
+class TestEndpointProvider extends ApiServiceSettingsEndpointProvider<IApiServiceEndpointProviderSettings> {
   public constructor(settings: ISettingObject<IApiServiceEndpointProviderSettings>) {
     super(settings);
   }

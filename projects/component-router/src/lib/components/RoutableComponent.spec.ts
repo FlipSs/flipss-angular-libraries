@@ -1,10 +1,10 @@
 import {RoutableComponent} from './RoutableComponent';
-import {COMPONENT_ROUTER, IComponentRouter} from '../models/IComponentRouter';
 import {ActivatedRoute, Router, Routes} from '@angular/router';
-import {Component, Inject} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentRouterModule} from '../modules/ComponentRouterModule';
 import {RouterTestingModule} from '@angular/router/testing';
+import {Component, Inject} from '@angular/core';
+import {COMPONENT_ROUTER, IComponentRouter} from '../models/IComponentRouter';
 
 describe('RoutableComponent', () => {
   let firstComponent: ComponentFixture<FirstTestComponent>;
@@ -32,12 +32,18 @@ describe('RoutableComponent', () => {
     expect(secondComponent).toBeTruthy();
   });
 
+  it('Should get correct component url', () => {
+    expect(firstComponent.componentInstance.getSelfUrl()).toEqual(router.createUrlTree(['']).toString());
+    expect(firstComponent.componentInstance.getSecondComponentUrl('1'))
+      .toEqual(router.createUrlTree([SecondTestComponent.path, '1']).toString());
+  });
+
   it('Should navigate to second component', async () => {
     const argument = 'test' + Math.random();
-    const spy = spyOn(router, 'navigate');
+    const spy = spyOn(router, 'navigateByUrl');
 
     await firstComponent.componentInstance.navigateToSecondComponent(argument);
-    expect(spy).toHaveBeenCalledWith([SecondTestComponent.path, argument]);
+    expect(spy).toHaveBeenCalledWith(router.createUrlTree([SecondTestComponent.path, argument]).toString());
   });
 });
 
@@ -50,8 +56,20 @@ class FirstTestComponent extends RoutableComponent {
     super(componentRouter, activatedRoute);
   }
 
+  public getSelfUrl(): string {
+    return this.getUrl();
+  }
+
+  public getSecondComponentUrl(par: string): string {
+    return this.getUrlFor(SecondTestComponent, {
+      test: par
+    });
+  }
+
   public navigateToSecondComponent(par: string): Promise<boolean> {
-    return this.navigateToAsync(SecondTestComponent, par);
+    return this.navigateToAsync(SecondTestComponent, {
+      test: par
+    });
   }
 }
 

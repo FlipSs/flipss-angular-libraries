@@ -1,6 +1,6 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {IApiServiceEndpointProvider} from '../models/IApiServiceEndpointProvider';
-import {Argument} from 'flipss-common-types/utils';
+import {Argument} from 'flipss-common-types';
 import {IHttpHeadersProvider} from '../models/IHttpHeadersProvider';
 import {ResponseType} from '../models/ResponseType';
 import {IApiService} from '../models/IApiService';
@@ -9,8 +9,8 @@ export class ApiService implements IApiService {
   public constructor(private readonly httpClient: HttpClient,
                      private readonly endpointProvider: IApiServiceEndpointProvider,
                      private readonly httpHeadersProvider?: IHttpHeadersProvider) {
-    Argument.isNotNullOrUndefined(httpClient, 'HttpClient');
-    Argument.isNotNullOrUndefined(endpointProvider, 'IApiServiceEndpointProvider');
+    Argument.isNotNullOrUndefined(httpClient, 'httpClient');
+    Argument.isNotNullOrUndefined(endpointProvider, 'endpointProvider');
   }
 
   protected get responseType(): ResponseType {

@@ -11,4 +11,4 @@ export * from './lib/models/ResponseType';
 
 // services
 export * from './lib/services/ApiService';
-export * from './lib/services/ApiServiceEndpointProvider';
+export * from './lib/services/ApiServiceSettingsEndpointProvider';

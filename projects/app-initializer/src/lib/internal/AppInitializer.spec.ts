@@ -5,7 +5,7 @@ import {AppInitializationStage} from '../models/AppInitializationStage';
 import {Injectable, InjectionToken, Provider} from '@angular/core';
 import {IInitializableType} from '../models/IInitializableType';
 import {APP_INITIALIZER, IAppInitializer} from '../models/IAppInitializer';
-import {Func} from 'flipss-common-types/types';
+import {Func} from 'flipss-common-types';
 import {APP_INITIALIZER_ERROR_LISTENER} from './AppInitializerErrorListener';
 import {AppInitializer} from './AppInitializer';
 import {IAppInitializationStageListener} from '../models/IAppInitializationStageListener';
@@ -13,21 +13,21 @@ import {APP_INITIALIZATION_STAGE_LISTENER} from './AppInitializationStageListene
 import {IAppInitializerErrorListener} from '../models/IAppInitializerErrorListener';
 
 describe('AppInitializer', () => {
-  const getTypeProviders: Func<void, Provider[]> = () => [
+  const getTypeProviders: Func<Provider[]> = () => [
     Type1,
     Type2,
     Type3,
     {provide: type4Token, useClass: Type4},
   ];
 
-  const getTypes: Func<void, IInitializableType[]> = () => [
+  const getTypes: Func<IInitializableType[]> = () => [
     {type: Type1, initializationStage: AppInitializationStage.preInitialization},
     {type: Type2, initializationStage: AppInitializationStage.initialization},
     {type: Type3, initializationStage: AppInitializationStage.postInitialization},
     {type: type4Token, initializationStage: AppInitializationStage.initialization}
   ];
 
-  function checkTypeInitializationOrder(getInitializationAction: Func<IAppInitializer, Promise<void>>): void {
+  function checkTypeInitializationOrder(getInitializationAction: Func<Promise<void>, IAppInitializer>): void {
     it('Types should initialize in correct order', async () => {
       const typeSpies = getTypes().sort((t1, t2) => t1.initializationStage - t2.initializationStage)
         .map(t => spyOn(TestBed.get(t.type), 'initializeAsync'));
@@ -84,11 +84,13 @@ describe('AppInitializer', () => {
   describe('App initialization', () => {
     beforeEach(async () => {
       TestBed.configureTestingModule({
-        providers: getTypeProviders(),
+        providers: [...getTypeProviders(), {
+          provide: APP_INITIALIZATION_STAGE_LISTENER,
+          useClass: TestStageListener,
+          multi: true
+        }],
         imports: [
-          AppInitializerModule.forRoot(getTypes(), undefined, [
-            TestStageListener
-          ])
+          AppInitializerModule.forRoot(getTypes())
         ]
       });
 
@@ -117,11 +119,13 @@ describe('AppInitializer', () => {
   describe('App initialization errors', () => {
     beforeEach(async () => {
       TestBed.configureTestingModule({
-        providers: getTypeProviders(),
+        providers: [...getTypeProviders(), {
+          provide: APP_INITIALIZATION_STAGE_LISTENER,
+          useClass: TestStageListenerWithError,
+          multi: true
+        }],
         imports: [
-          AppInitializerModule.forRoot(getTypes(), undefined, [
-            TestStageListenerWithError
-          ])
+          AppInitializerModule.forRoot(getTypes())
         ]
       });
 

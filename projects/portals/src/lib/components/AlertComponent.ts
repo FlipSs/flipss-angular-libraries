@@ -1,4 +1,4 @@
-import {Action} from 'flipss-common-types/types';
+import {Action} from 'flipss-common-types';
 
 export class AlertComponent<TData, TResult> {
   public readonly hidePromise: Promise<TResult>;

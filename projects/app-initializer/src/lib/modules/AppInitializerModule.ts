@@ -3,8 +3,10 @@ import {APP_INITIALIZER, IAppInitializer} from '../models/IAppInitializer';
 import {IAppInitializerErrorListener} from '../models/IAppInitializerErrorListener';
 import {IInitializableType} from '../models/IInitializableType';
 import {initializeAppAsync} from '../internal/initializeAppAsync';
-import {IAppInitializationStageListener} from '../models/IAppInitializationStageListener';
-import {getProviders} from '../internal/getProviders';
+import {INITIALIZABLE_TYPES} from '../internal/InitializableTypes';
+import {AppInitializer} from '../internal/AppInitializer';
+import {APP_INITIALIZER_ERROR_LISTENER} from '../internal/AppInitializerErrorListener';
+import {AppInitializerEmptyErrorListener} from '../internal/AppInitializerEmptyErrorListener';
 
 @NgModule({
   providers: [
@@ -27,11 +29,14 @@ export class AppInitializerModule {
   }
 
   public static forRoot(types: IInitializableType[],
-                        errorListener?: Type<IAppInitializerErrorListener>,
-                        stageListeners?: Type<IAppInitializationStageListener>[]): ModuleWithProviders<AppInitializerModule> {
+                        errorListener?: Type<IAppInitializerErrorListener>): ModuleWithProviders<AppInitializerModule> {
     return {
       ngModule: AppInitializerModule,
-      providers: getProviders(types, errorListener, stageListeners)
+      providers: [
+        {provide: INITIALIZABLE_TYPES, useValue: types},
+        {provide: APP_INITIALIZER, useClass: AppInitializer},
+        {provide: APP_INITIALIZER_ERROR_LISTENER, useClass: errorListener || AppInitializerEmptyErrorListener}
+      ]
     };
   }
 }

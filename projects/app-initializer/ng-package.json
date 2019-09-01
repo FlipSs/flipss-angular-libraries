@@ -4,7 +4,7 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
-      "flipss-common-types/utils": "flipss-common-types/utils"
+      "flipss-common-types": "flipss-common-types"
     }
   }
 }

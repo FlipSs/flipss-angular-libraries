@@ -2,46 +2,46 @@ import {Inject, Injectable, InjectionToken, Injector, Optional, Type} from '@ang
 import {INITIALIZABLE_TYPES} from './InitializableTypes';
 import {APP_INITIALIZER_ERROR_LISTENER} from './AppInitializerErrorListener';
 import {IAppInitializerErrorListener} from '../models/IAppInitializerErrorListener';
-import {Argument} from 'flipss-common-types/utils';
+import {Argument, asEnumerable, Func, IReadOnlyCollection, List} from 'flipss-common-types';
 import {IAppInitializer} from '../models/IAppInitializer';
 import {AppInitializationStage} from '../models/AppInitializationStage';
 import {IInitializableType} from '../models/IInitializableType';
 import {IInitializable} from '../models/IInitializable';
 import {APP_INITIALIZATION_STAGE_LISTENER} from './AppInitializationStageListener';
 import {IAppInitializationStageListener} from '../models/IAppInitializationStageListener';
-import {Func} from 'flipss-common-types/types';
 
 @Injectable()
 export class AppInitializer implements IAppInitializer {
-  private readonly types: IInitializableType[];
-  private readonly stageListeners: IAppInitializationStageListener[];
+  private readonly types: IReadOnlyCollection<IInitializableType>;
+  private readonly stageListeners: IReadOnlyCollection<IAppInitializationStageListener>;
 
   public constructor(@Inject(INITIALIZABLE_TYPES) types: IInitializableType[],
                      private readonly injector: Injector,
                      @Inject(APP_INITIALIZER_ERROR_LISTENER) private readonly errorListener: IAppInitializerErrorListener,
                      @Inject(APP_INITIALIZATION_STAGE_LISTENER) @Optional() stageListeners?: IAppInitializationStageListener[]) {
-    Argument.isNotNullOrUndefined(types, 'IInitializableTypes');
-    Argument.isNotNullOrUndefined(injector, 'AppInjector');
-    Argument.isNotNullOrUndefined(errorListener, 'IAppInitializerErrorListener');
+    Argument.isNotNullOrUndefined(types, 'types');
+    Argument.isNotNullOrUndefined(injector, 'injector');
+    Argument.isNotNullOrUndefined(errorListener, 'errorListener');
 
-    this.types = types.sort((t1, t2) => t1.initializationStage - t2.initializationStage);
-    this.stageListeners = stageListeners || [];
+    this.types = asEnumerable(types).orderBy(t => t.initializationStage).toReadOnlyList();
+    this.stageListeners = new List(stageListeners);
   }
 
   public async initializeAppAsync(): Promise<void> {
     let currentStage: AppInitializationStage;
     try {
-      const stages: AppInitializationStage[] = Object.values(AppInitializationStage)
-        .filter(v => typeof v === 'number')
-        .sort((s1, s2) => s1 - s2);
+      const stages: AppInitializationStage[] = asEnumerable(Object.values(AppInitializationStage))
+        .where(v => typeof v === 'number')
+        .orderBy(s => s)
+        .toArray();
 
       for (const stage of stages) {
         currentStage = stage;
 
         const stageTypes = this.getStageTypes(stage);
         const stageListeners = this.getStageListeners(stage);
-        const allStageListenersAsyncAction = (getAction: Func<IAppInitializationStageListener, Promise<void>>) => {
-          return Promise.all(stageListeners.map(getAction));
+        const allStageListenersAsyncAction = (getAction: Func<Promise<void>, IAppInitializationStageListener>) => {
+          return Promise.all(stageListeners.select(getAction));
         };
 
         await allStageListenersAsyncAction(l => l.beforeInitializationAsync(stageTypes.length));
@@ -65,12 +65,12 @@ export class AppInitializer implements IAppInitializer {
     }
   }
 
-  private getStageTypes(stage: AppInitializationStage): (Type<IInitializable> | InjectionToken<IInitializable>)[] {
-    return this.types.filter(t => t.initializationStage === stage).map(t => t.type);
+  private getStageTypes(stage: AppInitializationStage): IReadOnlyCollection<Type<IInitializable> | InjectionToken<IInitializable>> {
+    return this.types.where(t => t.initializationStage === stage).select(t => t.type).toReadOnlyList();
   }
 
-  private getStageListeners(stage: AppInitializationStage): IAppInitializationStageListener[] {
-    return this.stageListeners.filter(l => l.stage === stage);
+  private getStageListeners(stage: AppInitializationStage): IReadOnlyCollection<IAppInitializationStageListener> {
+    return this.stageListeners.where(l => l.stage === stage).toReadOnlyList();
   }
 
   private async initializeTypeAsync(type: Type<IInitializable> | InjectionToken<IInitializable>): Promise<void> {

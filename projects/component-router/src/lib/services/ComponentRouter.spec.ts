@@ -44,6 +44,13 @@ describe('IComponentRouter', () => {
       activatedRoute = TestBed.get(ActivatedRoute);
     });
 
+    it('Should get correct route', () => {
+      expect(componentRouter.getUrlFor(ParameterizedTestComponent, {
+        test: '15',
+        test1: '20'
+      })).toEqual(router.createUrlTree(ParameterizedTestComponent.getPathCommands(['15', '20'])).toString());
+    });
+
     it('Should navigate to TestComponent', async () => {
       await componentRouter.navigateToAsync(TestComponent);
       equals(router.url, TestComponent.path, TestComponent);
@@ -51,7 +58,10 @@ describe('IComponentRouter', () => {
 
     it('Should navigate to ParameterizedTestComponent', async () => {
       const args = [(Math.random() * 15).toString(), 'test'];
-      await componentRouter.navigateToAsync(ParameterizedTestComponent, args);
+      await componentRouter.navigateToAsync(ParameterizedTestComponent, {
+        test: args[0],
+        test1: args[1]
+      });
 
       equals(router.url,
         router.createUrlTree(ParameterizedTestComponent.getPathCommands(args)).toString(),
@@ -68,7 +78,9 @@ describe('IComponentRouter', () => {
 
     it('Should navigate to ParameterizedChildTestComponent', async () => {
       const args = [(Math.random() * 17).toString()];
-      await componentRouter.navigateToAsync(ParameterizedChildTestComponent, args);
+      await componentRouter.navigateToAsync(ParameterizedChildTestComponent, {
+        test: args[0]
+      });
       const urlTree = router.createUrlTree([TestComponent.path].concat(ParameterizedChildTestComponent.getPathCommands(args)));
       equals(router.url, urlTree.toString(), ParameterizedChildTestComponent, true);
     });
@@ -91,7 +103,7 @@ class ParameterizedTestComponent {
   public static readonly path = `${ParameterizedTestComponent.pathFirstPart}/:test/${ParameterizedTestComponent.pathSecondPart}/:test1`;
 
   public static getPathCommands(args?: string[]): string[] {
-    return [this.pathFirstPart, args[0], this.pathSecondPart, ...args.slice(0, 1)];
+    return [this.pathFirstPart, args[0], this.pathSecondPart, args[1]];
   }
 }
 

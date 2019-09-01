@@ -1,7 +1,7 @@
 import {PortalService} from '../internal/PortalService';
 import {ILoadingService} from '../models/ILoadingService';
 import {ApplicationRef, ComponentFactoryResolver, Injector} from '@angular/core';
-import {Lazy} from 'flipss-common-types/utils';
+import {Lazy} from 'flipss-common-types';
 import {ComponentPortal} from '@angular/cdk/portal';
 
 export abstract class LoadingService<TComponent> extends PortalService implements ILoadingService {

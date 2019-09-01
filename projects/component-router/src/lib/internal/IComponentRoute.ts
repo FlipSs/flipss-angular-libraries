@@ -1,3 +1,5 @@
+import {Params} from '@angular/router';
+
 export interface IComponentRoute {
-  getRouteCommands(args?: string[]): string[];
+  getRouteCommands(routeParams?: Params): string[];
 }

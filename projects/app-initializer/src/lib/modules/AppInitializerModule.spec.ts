@@ -1,6 +1,8 @@
 import {APP_INITIALIZER, IAppInitializer} from '../models/IAppInitializer';
 import {TestBed} from '@angular/core/testing';
 import {AppInitializerModule} from './AppInitializerModule';
+import {AppInitializerEmptyErrorListener} from '../internal/AppInitializerEmptyErrorListener';
+import {Injectable} from '@angular/core';
 
 describe('AppInitializerModule', () => {
   function shouldBeCreated(): void {
@@ -11,8 +13,11 @@ describe('AppInitializerModule', () => {
 
   describe('Default app initializer', () => {
     beforeEach(() => TestBed.configureTestingModule({
+      providers: [
+        TestErrorListener
+      ],
       imports: [
-        AppInitializerModule.forRoot([])
+        AppInitializerModule.forRoot([], TestErrorListener)
       ]
     }));
 
@@ -29,6 +34,10 @@ describe('AppInitializerModule', () => {
     shouldBeCreated();
   });
 });
+
+@Injectable()
+class TestErrorListener extends AppInitializerEmptyErrorListener {
+}
 
 class CustomAppInitializer implements IAppInitializer {
   public initializeAppAsync(): Promise<void> {

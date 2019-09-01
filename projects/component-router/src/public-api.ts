@@ -4,10 +4,6 @@
 
 // models
 export * from './lib/models/IComponentRouter';
-export * from './lib/models/IRoutePathData';
-
-// types
-export * from './lib/types/Component';
 
 // components
 export * from './lib/components/RoutableComponent';

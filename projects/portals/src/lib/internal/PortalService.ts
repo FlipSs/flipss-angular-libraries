@@ -1,6 +1,6 @@
 import {ApplicationRef, ComponentFactoryResolver, Injector} from '@angular/core';
-import {Argument} from "flipss-common-types/utils";
-import {ComponentPortal, DomPortalHost} from "@angular/cdk/portal";
+import {Argument} from 'flipss-common-types';
+import {ComponentPortal, DomPortalHost} from '@angular/cdk/portal';
 
 export abstract class PortalService {
   private readonly host: DomPortalHost;
@@ -8,9 +8,9 @@ export abstract class PortalService {
   protected constructor(private readonly injector: Injector,
                         componentFactoryResolver: ComponentFactoryResolver,
                         appRef: ApplicationRef) {
-    Argument.isNotNullOrUndefined(injector, 'Injector');
-    Argument.isNotNullOrUndefined(componentFactoryResolver, 'ComponentFactoryResolver');
-    Argument.isNotNullOrUndefined(appRef, 'ApplicationRef');
+    Argument.isNotNullOrUndefined(injector, 'injector');
+    Argument.isNotNullOrUndefined(componentFactoryResolver, 'componentFactoryResolver');
+    Argument.isNotNullOrUndefined(appRef, 'appRef');
 
     this.host = new DomPortalHost(document.body,
       componentFactoryResolver,
