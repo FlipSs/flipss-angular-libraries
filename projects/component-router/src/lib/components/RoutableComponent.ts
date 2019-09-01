@@ -26,4 +26,8 @@ export abstract class RoutableComponent {
   protected navigateToAsync(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): Promise<boolean> {
     return this.componentRouter.navigateToAsync(target, routeParams, queryParams);
   }
+
+  protected navigateAsync(url: string): Promise<boolean> {
+    return this.componentRouter.navigateAsync(url);
+  }
 }

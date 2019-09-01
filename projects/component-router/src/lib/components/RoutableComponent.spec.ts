@@ -45,6 +45,13 @@ describe('RoutableComponent', () => {
     await firstComponent.componentInstance.navigateToSecondComponent(argument);
     expect(spy).toHaveBeenCalledWith(router.createUrlTree([SecondTestComponent.path, argument]).toString());
   });
+
+  it('Should navigate to url', async () => {
+    const spy = spyOn(router, 'navigateByUrl');
+
+    await firstComponent.componentInstance.navigate('test');
+    expect(spy).toHaveBeenCalledWith('test');
+  });
 });
 
 @Component({
@@ -58,6 +65,10 @@ class FirstTestComponent extends RoutableComponent {
 
   public getSelfUrl(): string {
     return this.getUrl();
+  }
+
+  public navigate(url: string): Promise<boolean> {
+    return this.navigateAsync(url);
   }
 
   public getSecondComponentUrl(par: string): string {

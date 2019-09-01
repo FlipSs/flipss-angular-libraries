@@ -56,6 +56,11 @@ describe('IComponentRouter', () => {
       equals(router.url, TestComponent.path, TestComponent);
     });
 
+    it('Should navigate to url', async () => {
+      await componentRouter.navigateAsync(TestComponent.path);
+      equals(router.url, TestComponent.path, TestComponent);
+    });
+
     it('Should navigate to ParameterizedTestComponent', async () => {
       const args = [(Math.random() * 15).toString(), 'test'];
       await componentRouter.navigateToAsync(ParameterizedTestComponent, {

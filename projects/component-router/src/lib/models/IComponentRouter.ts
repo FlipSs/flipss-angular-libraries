@@ -6,6 +6,8 @@ export interface IComponentRouter {
   getUrlFor(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): string;
 
   navigateToAsync(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): Promise<boolean>;
+
+  navigateAsync(url: string): Promise<boolean>;
 }
 
 export const COMPONENT_ROUTER = new InjectionToken<IComponentRouter>('IComponentRouter');

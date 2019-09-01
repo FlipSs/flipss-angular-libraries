@@ -54,13 +54,23 @@ export class ComponentRouter implements IComponentRouter {
 
     const url = this.getUrl(target, routeParams, queryParams);
 
-    return this.ngZone.run(() => this.router.navigateByUrl(url));
+    return this.navigateInternalAsync(url);
   }
 
   public getUrlFor(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): string {
     Argument.isNotNullOrUndefined(target, 'target');
 
     return this.getUrl(target, routeParams, queryParams);
+  }
+
+  public navigateAsync(url: string): Promise<boolean> {
+    Argument.isNotNullOrUndefined(url, 'url');
+
+    return this.navigateInternalAsync(url);
+  }
+
+  private navigateInternalAsync(url: string): Promise<boolean> {
+    return this.ngZone.run(() => this.router.navigateByUrl(url));
   }
 
   private getUrl(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): string {
