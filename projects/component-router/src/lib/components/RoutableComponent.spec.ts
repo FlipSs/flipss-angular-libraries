@@ -58,9 +58,8 @@ describe('RoutableComponent', () => {
   template: '<p>test</p>'
 })
 class FirstTestComponent extends RoutableComponent {
-  public constructor(@Inject(COMPONENT_ROUTER) componentRouter: IComponentRouter,
-                     activatedRoute: ActivatedRoute) {
-    super(componentRouter, activatedRoute);
+  public constructor(@Inject(COMPONENT_ROUTER) componentRouter: IComponentRouter) {
+    super(componentRouter);
   }
 
   public getSelfUrl(): string {
@@ -90,9 +89,8 @@ class FirstTestComponent extends RoutableComponent {
 class SecondTestComponent extends RoutableComponent {
   public static readonly path = 'second';
 
-  public constructor(@Inject(COMPONENT_ROUTER) componentRouter: IComponentRouter,
-                     activatedRoute: ActivatedRoute) {
-    super(componentRouter, activatedRoute);
+  public constructor(@Inject(COMPONENT_ROUTER) componentRouter: IComponentRouter) {
+    super(componentRouter);
   }
 }
 
