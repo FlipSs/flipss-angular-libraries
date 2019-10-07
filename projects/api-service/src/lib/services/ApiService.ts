@@ -25,6 +25,10 @@ export class ApiService implements IApiService {
     return this.httpClient.post<T>(this.buildUrl(action), body, this.getOptions(params)).toPromise();
   }
 
+  public deleteAsync<T>(action: string, params?: HttpParams): Promise<T> {
+    return this.httpClient.delete<T>(this.buildUrl(action), this.getOptions(params)).toPromise();
+  }
+
   private buildUrl(action: string): string {
     return `${this.endpointProvider.getEndpoint()}/${action}`;
   }

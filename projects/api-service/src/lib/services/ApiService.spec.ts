@@ -38,6 +38,14 @@ describe('ApiService', () => {
 
     expect(request.request.method).toEqual('POST');
   });
+
+  it('Should make delete request', () => {
+    apiService.deleteAsync('test');
+
+    const request = backend.expectOne('test/test');
+
+    expect(request.request.method).toEqual('DELETE');
+  });
 });
 
 class TestApiServiceEndpointProviderSettingObject implements ISettingObject<IApiServiceEndpointProviderSettings> {
