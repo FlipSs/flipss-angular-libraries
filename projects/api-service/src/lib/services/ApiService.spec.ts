@@ -24,7 +24,7 @@ describe('ApiService', () => {
   });
 
   it('Should make get request', () => {
-    apiService.getAsync('test');
+    apiService.getAsync('test').toPromise();
 
     const request = backend.expectOne('test/test');
 
@@ -32,7 +32,7 @@ describe('ApiService', () => {
   });
 
   it('Should make post request', () => {
-    apiService.postAsync('test');
+    apiService.postAsync('test').toPromise();
 
     const request = backend.expectOne('test/test');
 
@@ -40,7 +40,7 @@ describe('ApiService', () => {
   });
 
   it('Should make delete request', () => {
-    apiService.deleteAsync('test');
+    apiService.deleteAsync('test').toPromise();
 
     const request = backend.expectOne('test/test');
 
