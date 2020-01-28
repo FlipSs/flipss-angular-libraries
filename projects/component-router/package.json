@@ -1,6 +1,6 @@
 {
   "name": "flipss-component-router",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Provides service that help avoid using of 'raw' routes",
   "scripts": {
     "npm-publish": "ng test component-router --watch=false && npm version patch && ng build component-router && cd ../../dist/component-router && npm publish"
@@ -24,17 +24,17 @@
     "tslib": "^1.10.0"
   },
   "peerDependencies": {
-    "flipss-common-types": "^1.0.27",
-    "@angular/router": "^8.1.2",
-    "@angular/common": "^8.1.2",
-    "@angular/core": "^8.1.2"
+    "flipss-common-types": "^1.0.36",
+    "@angular/router": "^8.2.14",
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14"
   },
   "devDependencies": {
-    "flipss-common-types": "^1.0.27",
-    "@angular/platform-browser": "^8.1.2",
-    "@angular/router": "^8.1.2",
-    "@angular/common": "^8.1.2",
-    "@angular/core": "^8.1.2",
-    "zone.js": "^0.9.1"
+    "flipss-common-types": "^1.0.36",
+    "@angular/platform-browser": "^8.2.14",
+    "@angular/router": "^8.2.14",
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "zone.js": "^0.10.2"
   }
 }
