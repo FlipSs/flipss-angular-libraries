@@ -10,13 +10,13 @@ import {AlertService} from '../internal/AlertService';
   ]
 })
 export class AlertServiceModule {
-  public static forRoot(components: Type<AlertComponent<any, any>>[]): ModuleWithProviders<AlertServiceModule> {
+  public static forRoot(componentTypes: Type<AlertComponent<any, any>>[]): ModuleWithProviders<AlertServiceModule> {
     return {
       ngModule: AlertServiceModule,
       providers: [
         {
           provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-          useValue: components,
+          useValue: componentTypes,
           multi: true
         },
         {

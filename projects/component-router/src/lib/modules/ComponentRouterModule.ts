@@ -4,11 +4,11 @@ import {COMPONENT_ROUTER, IComponentRouter} from '../models/IComponentRouter';
 
 @NgModule()
 export class ComponentRouterModule {
-  public static forRoot(customComponentRouter?: Type<IComponentRouter>): ModuleWithProviders<ComponentRouterModule> {
+  public static forRoot(customComponentRouterType?: Type<IComponentRouter>): ModuleWithProviders<ComponentRouterModule> {
     return {
       ngModule: ComponentRouterModule,
       providers: [
-        {provide: COMPONENT_ROUTER, useClass: customComponentRouter || ComponentRouter}
+        {provide: COMPONENT_ROUTER, useClass: customComponentRouterType || ComponentRouter}
       ]
     };
   }

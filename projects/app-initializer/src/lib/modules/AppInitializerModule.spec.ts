@@ -43,8 +43,4 @@ class CustomAppInitializer implements IAppInitializer {
   public initializeAppAsync(): Promise<void> {
     return Promise.resolve();
   }
-
-  public initializeAppTypesAsync(): Promise<void> {
-    return Promise.resolve();
-  }
 }

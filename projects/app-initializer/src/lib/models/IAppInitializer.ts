@@ -1,8 +1,6 @@
 import {InjectionToken} from '@angular/core';
 
 export interface IAppInitializer {
-  initializeAppTypesAsync(): Promise<void>;
-
   initializeAppAsync(): Promise<void>;
 }
 

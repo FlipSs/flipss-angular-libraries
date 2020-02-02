@@ -1,3 +1,3 @@
 export interface IApiServiceEndpointProviderSettings {
-  readonly endpoints: string[];
+  readonly endpoints: ReadonlyArray<string>;
 }

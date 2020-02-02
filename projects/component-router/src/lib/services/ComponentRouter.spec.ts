@@ -103,12 +103,12 @@ class TestComponent {
   template: '<div>Test</div>'
 })
 class ParameterizedTestComponent {
-  private static readonly pathFirstPart = 'test-parameterized';
-  private static readonly pathSecondPart = 'test';
-  public static readonly path = `${ParameterizedTestComponent.pathFirstPart}/:test/${ParameterizedTestComponent.pathSecondPart}/:test1`;
+  private static readonly _pathFirstPart = 'test-parameterized';
+  private static readonly _pathSecondPart = 'test';
+  public static readonly path = `${ParameterizedTestComponent._pathFirstPart}/:test/${ParameterizedTestComponent._pathSecondPart}/:test1`;
 
   public static getPathCommands(args?: string[]): string[] {
-    return [this.pathFirstPart, args[0], this.pathSecondPart, args[1]];
+    return [this._pathFirstPart, args[0], this._pathSecondPart, args[1]];
   }
 }
 
@@ -123,11 +123,11 @@ class ChildTestComponent {
   template: '<div>Test</div>'
 })
 class ParameterizedChildTestComponent {
-  private static readonly pathFirstPart = 'test-parameterized-child';
-  public static readonly path = `${ParameterizedChildTestComponent.pathFirstPart}/:test`;
+  private static readonly _pathFirstPart = 'test-parameterized-child';
+  public static readonly path = `${ParameterizedChildTestComponent._pathFirstPart}/:test`;
 
   public static getPathCommands(args?: string[]): string[] {
-    return [this.pathFirstPart].concat(args);
+    return [this._pathFirstPart].concat(args);
   }
 }
 
@@ -135,20 +135,8 @@ const testAppRoutes: Routes = [
   {
     path: TestComponent.path, component: TestComponent, children: [
       {path: ChildTestComponent.path, component: ChildTestComponent},
-      {
-        path: ParameterizedChildTestComponent.path, component: ParameterizedChildTestComponent, data: {
-          getPathCommands(args?: string[]): string[] {
-            return ParameterizedChildTestComponent.getPathCommands(args);
-          }
-        }
-      }
+      {path: ParameterizedChildTestComponent.path, component: ParameterizedChildTestComponent}
     ]
   },
-  {
-    path: ParameterizedTestComponent.path, component: ParameterizedTestComponent, data: {
-      getPathCommands(args?: string[]): string[] {
-        return ParameterizedTestComponent.getPathCommands(args);
-      }
-    }
-  }
+  {path: ParameterizedTestComponent.path, component: ParameterizedTestComponent}
 ];

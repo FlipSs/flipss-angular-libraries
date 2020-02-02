@@ -7,11 +7,11 @@ import {IApiService} from '../models/IApiService';
 import {Observable} from 'rxjs';
 
 export class ApiService implements IApiService {
-  public constructor(private readonly httpClient: HttpClient,
-                     private readonly endpointProvider: IApiServiceEndpointProvider,
-                     private readonly httpHeadersProvider?: IHttpHeadersProvider) {
-    Argument.isNotNullOrUndefined(httpClient, 'httpClient');
-    Argument.isNotNullOrUndefined(endpointProvider, 'endpointProvider');
+  public constructor(private readonly _httpClient: HttpClient,
+                     private readonly _endpointProvider: IApiServiceEndpointProvider,
+                     private readonly _httpHeadersProvider?: IHttpHeadersProvider) {
+    Argument.isNotNullOrUndefined(this._httpClient, 'httpClient');
+    Argument.isNotNullOrUndefined(this._endpointProvider, 'endpointProvider');
   }
 
   protected get responseType(): ResponseType {
@@ -19,24 +19,24 @@ export class ApiService implements IApiService {
   }
 
   public getAsync<T>(action: string, params?: HttpParams): Observable<T> {
-    return this.httpClient.get<T>(this.buildUrl(action), this.getOptions(params));
+    return this._httpClient.get<T>(this.buildUrl(action), this.getOptions(params));
   }
 
   public postAsync<T>(action: string, body?: any, params?: HttpParams): Observable<T> {
-    return this.httpClient.post<T>(this.buildUrl(action), body, this.getOptions(params));
+    return this._httpClient.post<T>(this.buildUrl(action), body, this.getOptions(params));
   }
 
   public deleteAsync<T>(action: string, params?: HttpParams): Observable<T> {
-    return this.httpClient.delete<T>(this.buildUrl(action), this.getOptions(params));
+    return this._httpClient.delete<T>(this.buildUrl(action), this.getOptions(params));
   }
 
   private buildUrl(action: string): string {
-    return `${this.endpointProvider.getEndpoint()}/${action}`;
+    return `${this._endpointProvider.getEndpoint()}/${action}`;
   }
 
   private getOptions(params?: HttpParams) {
     return {
-      headers: this.httpHeadersProvider && this.httpHeadersProvider.getHeaders(),
+      headers: this._httpHeadersProvider && this._httpHeadersProvider.getHeaders(),
       params,
       responseType: this.responseType as 'json'
     };

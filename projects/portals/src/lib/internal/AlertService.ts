@@ -3,36 +3,28 @@ import {ALERT_DATA, IAlertService} from '../models/IAlertService';
 import {AlertComponent} from '../components/AlertComponent';
 import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
 import {PortalService} from './PortalService';
-import {Action} from 'flipss-common-types';
+import {Action, TypeUtils} from 'flipss-common-types';
 
 @Injectable()
 export class AlertService extends PortalService implements IAlertService {
-  private readonly alertResolveQueue: Action<any>[];
+  private readonly _alertResolveQueue: Action<any>[];
 
   public constructor(injector: Injector,
                      componentFactoryResolver: ComponentFactoryResolver,
                      appRef: ApplicationRef) {
     super(injector, componentFactoryResolver, appRef);
 
-    this.alertResolveQueue = [];
+    this._alertResolveQueue = [];
   }
 
   public show<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData): Promise<T> {
     const portal = new ComponentPortal<T>(component, null, this.createInjector(data));
 
     if (this.hasAttached()) {
-      let promiseResolve: Action<T>;
-      const promise = new Promise<T>(resolve => {
-        promiseResolve = () => {
-          const componentInstance = this.showInternal<T>(portal);
-          resolve(componentInstance);
-        };
-      });
-
-      // noinspection JSUnusedAssignment
-      this.alertResolveQueue.push(promiseResolve);
-
-      return promise;
+      return new Promise<T>(resolve => this._alertResolveQueue.push(() => {
+        const componentInstance = this.showInternal<T>(portal);
+        resolve(componentInstance);
+      }));
     }
 
     return Promise.resolve(this.showInternal<T>(portal));
@@ -40,11 +32,12 @@ export class AlertService extends PortalService implements IAlertService {
 
   private showInternal<T extends AlertComponent<any, any>>(portal: ComponentPortal<T>): T {
     const instance = this.attach(portal);
-    if (instance && instance.hidePromise) {
+    if (!TypeUtils.isNullOrUndefined(instance) && !TypeUtils.isNullOrUndefined(instance.hidePromise)) {
       instance.hidePromise.then(() => {
         this.detach();
-        if (this.alertResolveQueue.length > 0) {
-          this.alertResolveQueue.shift()();
+
+        if (this._alertResolveQueue.length > 0) {
+          this._alertResolveQueue.shift()();
         }
       });
     }
@@ -53,12 +46,10 @@ export class AlertService extends PortalService implements IAlertService {
   }
 
   private createInjector(data?: any): Injector | null {
-    if (data != null) {
-      const injectionTokens = new WeakMap().set(ALERT_DATA, data);
-
-      return new PortalInjector(this.serviceInjector, injectionTokens);
+    if (data == null) {
+      return null;
     }
 
-    return null;
+    return new PortalInjector(this.serviceInjector, new WeakMap().set(ALERT_DATA, data));
   }
 }

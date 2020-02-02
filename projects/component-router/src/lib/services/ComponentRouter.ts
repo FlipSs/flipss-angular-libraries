@@ -7,15 +7,15 @@ import {Argument, Dictionary, IReadOnlyDictionary, TypeConstructor, TypeUtils} f
 
 @Injectable()
 export class ComponentRouter implements IComponentRouter {
-  private routes: IReadOnlyDictionary<TypeConstructor<any>, IComponentRoute>;
+  private _routes: IReadOnlyDictionary<TypeConstructor<any>, IComponentRoute>;
 
-  public constructor(private readonly router: Router,
-                     private readonly ngZone: NgZone) {
-    Argument.isNotNullOrUndefined(router, 'router');
-    Argument.isNotNullOrUndefined(ngZone, 'ngZone');
+  public constructor(private readonly _router: Router,
+                     private readonly _ngZone: NgZone) {
+    Argument.isNotNullOrUndefined(this._router, 'router');
+    Argument.isNotNullOrUndefined(this._ngZone, 'ngZone');
 
     this.updateRoutes();
-    this.router.events.subscribe(event => {
+    this._router.events.subscribe(event => {
       if (TypeUtils.is(event, RouteConfigLoadEnd)) {
         this.updateRoutes();
       }
@@ -70,26 +70,26 @@ export class ComponentRouter implements IComponentRouter {
   }
 
   private navigateInternalAsync(url: string): Promise<boolean> {
-    return this.ngZone.run(() => this.router.navigateByUrl(url));
+    return this._ngZone.run(() => this._router.navigateByUrl(url));
   }
 
   private getUrl(target: TypeConstructor<any>, routeParams?: Params, queryParams?: Params): string {
-    this.ensureTargetRegistered(target);
+    this.ensureTargetIsRegistered(target);
 
-    const route = this.routes.get(target);
+    const route = this._routes.get(target);
 
-    return this.router.createUrlTree(route.getRouteCommands(routeParams), {
+    return this._router.createUrlTree(route.getRouteCommands(routeParams), {
       queryParams
     }).toString();
   }
 
-  private ensureTargetRegistered(target: TypeConstructor<any>): void {
-    if (!this.routes.containsKey(target)) {
+  private ensureTargetIsRegistered(target: TypeConstructor<any>): void {
+    if (!this._routes.containsKey(target)) {
       throw new Error(`Route for component: ${target.name} is not registered`);
     }
   }
 
   private updateRoutes(): void {
-    this.routes = ComponentRouter.getRoutes(this.router.config);
+    this._routes = ComponentRouter.getRoutes(this._router.config);
   }
 }

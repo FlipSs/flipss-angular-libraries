@@ -1,6 +1,6 @@
 {
   "name": "flipss-portals",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Provides some different wrappers on angular cdk portals",
   "scripts": {
     "npm-publish": "ng test portals --watch=false && npm version patch && ng build portals && cd ../../dist/portals && npm publish"
@@ -24,13 +24,13 @@
     "tslib": "^1.10.0"
   },
   "peerDependencies": {
-    "flipss-common-types": "^1.0.36",
+    "flipss-common-types": "^1.0.38",
     "@angular/common": "^8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/core": "^8.2.14"
   },
   "devDependencies": {
-    "flipss-common-types": "^1.0.36",
+    "flipss-common-types": "^1.0.38",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "^8.2.14",
     "@angular/core": "^8.2.14"

@@ -1,48 +1,44 @@
 import {TestBed} from '@angular/core/testing';
 import {AppInitializerModule} from '../modules/AppInitializerModule';
 import {IInitializable} from '../models/IInitializable';
-import {AppInitializationStage} from '../models/AppInitializationStage';
-import {Injectable, InjectionToken, Provider} from '@angular/core';
-import {IInitializableType} from '../models/IInitializableType';
+import {InjectionToken, Provider} from '@angular/core';
+import {IInitializableInjectionToken} from '../models/IInitializableInjectionToken';
 import {APP_INITIALIZER, IAppInitializer} from '../models/IAppInitializer';
 import {Func} from 'flipss-common-types';
-import {APP_INITIALIZER_ERROR_LISTENER} from './AppInitializerErrorListener';
 import {AppInitializer} from './AppInitializer';
-import {IAppInitializationStageListener} from '../models/IAppInitializationStageListener';
-import {APP_INITIALIZATION_STAGE_LISTENER} from './AppInitializationStageListener';
 import {IAppInitializerErrorListener} from '../models/IAppInitializerErrorListener';
+import {APP_INITIALIZER_ERROR_LISTENER} from "./tokens";
 
 describe('AppInitializer', () => {
-  const getTypeProviders: Func<Provider[]> = () => [
+  const getProviders: Func<Provider[]> = () => [
     Type1,
     Type2,
     Type3,
     {provide: type4Token, useClass: Type4},
   ];
 
-  const getTypes: Func<IInitializableType[]> = () => [
-    {type: Type1, initializationStage: AppInitializationStage.preInitialization},
-    {type: Type2, initializationStage: AppInitializationStage.initialization},
-    {type: Type3, initializationStage: AppInitializationStage.postInitialization},
-    {type: type4Token, initializationStage: AppInitializationStage.initialization}
+  const getTokens: Func<IInitializableInjectionToken[]> = () => [
+    {value: Type1},
+    {value: Type2},
+    {value: Type3},
+    {value: type4Token}
   ];
 
-  function checkTypeInitializationOrder(getInitializationAction: Func<Promise<void>, IAppInitializer>): void {
+  function checkTypeInitializationOrder(): void {
     it('Types should initialize in correct order', async () => {
-      const typeSpies = getTypes().sort((t1, t2) => t1.initializationStage - t2.initializationStage)
-        .map(t => spyOn(TestBed.get(t.type), 'initializeAsync'));
+      const tokenSpies = getTokens().map(t => spyOn(TestBed.get(t.value), 'initializeAsync'));
 
-      await getInitializationAction(getAppInitializer());
+      await getAppInitializer().initializeAppAsync();
 
-      if (typeSpies.length > 1) {
-        let previousSpy = typeSpies[0];
-        for (let i = 1; i < typeSpies.length; i++) {
-          const currentSpy = typeSpies[i];
+      if (tokenSpies.length > 1) {
+        let previousSpy = tokenSpies[0];
+        for (let i = 1; i < tokenSpies.length; i++) {
+          const currentSpy = tokenSpies[i];
           expect(previousSpy).toHaveBeenCalledBefore(currentSpy);
           previousSpy = currentSpy;
         }
-      } else if (typeSpies.length === 1) {
-        expect(typeSpies[0]).toHaveBeenCalled();
+      } else if (tokenSpies.length === 1) {
+        expect(tokenSpies[0]).toHaveBeenCalled();
       }
     });
   }
@@ -59,73 +55,27 @@ describe('AppInitializer', () => {
     });
   }
 
-  describe('Type initialization', () => {
-    beforeEach(async () => {
-      TestBed.configureTestingModule({
-        providers: getTypeProviders(),
-        imports: [
-          AppInitializerModule.forRoot(getTypes())
-        ]
-      });
-
-      await waitForAppInitialization();
-    });
-
-    checkTypeInitializationOrder(a => a.initializeAppTypesAsync());
-
-    it('Should call error listener on type initialization error', async () => {
-      const spy = spyOn(TestBed.get(APP_INITIALIZER_ERROR_LISTENER), 'onTypeInitializationError');
-      await getAppInitializer().initializeAppTypesAsync();
-
-      expect(spy).toHaveBeenCalledWith(Type4.errorMessage, type4Token);
-    });
-  });
-
   describe('App initialization', () => {
     beforeEach(async () => {
       TestBed.configureTestingModule({
-        providers: [...getTypeProviders(), {
-          provide: APP_INITIALIZATION_STAGE_LISTENER,
-          useClass: TestStageListener,
-          multi: true
-        }],
+        providers: getProviders(),
         imports: [
-          AppInitializerModule.forRoot(getTypes())
+          AppInitializerModule.forRoot(getTokens())
         ]
       });
 
       await waitForAppInitialization();
     });
 
-    checkTypeInitializationOrder(a => a.initializeAppAsync());
-
-    it('Should call stage listener methods', async () => {
-      const stageListener: IAppInitializationStageListener = TestBed.get(APP_INITIALIZATION_STAGE_LISTENER)[0];
-      const type1InitSpy = spyOn(TestBed.get(Type1), 'initializeAsync');
-      const beforeInitSpy = spyOn(stageListener, 'beforeInitializationAsync');
-      const onTypeInitSpy = spyOn(stageListener, 'onTypeInitializedAsync');
-      const afterInitSpy = spyOn(stageListener, 'afterInitializationAsync');
-
-      await getAppInitializer().initializeAppAsync();
-
-      expect(onTypeInitSpy).toHaveBeenCalledTimes(getTypes().filter(t => t.initializationStage === TestStageListener.stage).length);
-      expect(type1InitSpy).toHaveBeenCalledBefore(beforeInitSpy);
-      expect(beforeInitSpy).toHaveBeenCalledBefore(onTypeInitSpy);
-      expect(onTypeInitSpy).toHaveBeenCalledBefore(afterInitSpy);
-      expect(afterInitSpy).toHaveBeenCalled();
-    });
+    checkTypeInitializationOrder();
   });
 
   describe('App initialization errors', () => {
     beforeEach(async () => {
       TestBed.configureTestingModule({
-        providers: [...getTypeProviders(), {
-          provide: APP_INITIALIZATION_STAGE_LISTENER,
-          useClass: TestStageListenerWithError,
-          multi: true
-        }],
+        providers: [...getProviders(), ErrorType],
         imports: [
-          AppInitializerModule.forRoot(getTypes())
+          AppInitializerModule.forRoot([...getTokens(), {value: ErrorType}])
         ]
       });
 
@@ -134,10 +84,10 @@ describe('AppInitializer', () => {
 
     it('Should call error listener', async () => {
       const errorListener: IAppInitializerErrorListener = TestBed.get(APP_INITIALIZER_ERROR_LISTENER);
-      const spy = spyOn(errorListener, 'onAppInitializationError');
+      const spy = spyOn(errorListener, 'onInitializationError');
 
       await getAppInitializer().initializeAppAsync();
-      expect(spy).toHaveBeenCalledWith(TestStageListenerWithError.error, TestStageListener.stage);
+      expect(spy).toHaveBeenCalledWith(error, TestBed.get(ErrorType));
     });
   });
 })
@@ -165,34 +115,11 @@ class Type4 extends Type1 {
   }
 }
 
-@Injectable()
-class TestStageListener implements IAppInitializationStageListener {
-  public static readonly stage = AppInitializationStage.initialization;
-
-  public get stage(): AppInitializationStage {
-    return TestStageListener.stage;
-  }
-
-  public afterInitializationAsync(): Promise<void> {
-    return Promise.resolve();
-  }
-
-  public beforeInitializationAsync(typeCount: number): Promise<void> {
-    return Promise.resolve();
-  }
-
-  public onTypeInitializedAsync(): Promise<void> {
-    return Promise.resolve();
+class ErrorType implements IInitializable {
+  public initializeAsync(): Promise<void> {
+    return Promise.reject(error);
   }
 }
 
-@Injectable()
-class TestStageListenerWithError extends TestStageListener {
-  public static readonly error = new Error('test');
-
-  public onTypeInitializedAsync(): Promise<void> {
-    return Promise.reject(TestStageListenerWithError.error);
-  }
-}
-
+const error = 'error';
 const type4Token = new InjectionToken<Type4>('Type4');

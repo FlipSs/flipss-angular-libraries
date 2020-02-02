@@ -1,23 +1,27 @@
-import {Action} from 'flipss-common-types';
+import {Action, TypeUtils} from 'flipss-common-types';
 
 export class AlertComponent<TData, TResult> {
-  public readonly hidePromise: Promise<TResult>;
-  private hideResolve: Action<TResult>;
+  private readonly _hidePromise: Promise<TResult>;
+  private _hideResolve: Action<TResult>;
 
-  protected constructor(private readonly componentData?: TData) {
-    this.hidePromise = new Promise<TResult>((resolve: Action<TResult>) => {
-      this.hideResolve = resolve;
+  protected constructor(private readonly _componentData?: TData) {
+    this._hidePromise = new Promise<TResult>((resolve: Action<TResult>) => {
+      this._hideResolve = resolve;
     });
   }
 
+  public get hidePromise(): Promise<TResult> {
+    return this._hidePromise;
+  }
+
   public get data(): TData {
-    return this.componentData;
+    return this._componentData;
   }
 
   public hide(result?: TResult) {
-    if (this.hideResolve) {
-      this.hideResolve(result);
-      this.hideResolve = null;
+    if (!TypeUtils.isNullOrUndefined(this._hideResolve)) {
+      this._hideResolve(result);
+      this._hideResolve = null;
     }
   }
 }
