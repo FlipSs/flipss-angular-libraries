@@ -1,6 +1,6 @@
 {
   "name": "flipss-dynamic-components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Provides utilities to create dynamic components",
   "scripts": {
     "npm-publish": "ng test dynamic-components --watch=false && npm version patch && ng build dynamic-components && cd ../../dist/dynamic-components && npm publish"

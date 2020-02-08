@@ -1,6 +1,6 @@
 {
   "name": "flipss-api-service",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "Provides base models for api services",
   "scripts": {
     "npm-publish": "ng test api-service --watch=false && npm version patch && ng build api-service && cd ../../dist/api-service && npm publish"
@@ -23,14 +23,12 @@
   "peerDependencies": {
     "flipss-common-types": "^1.0.41",
     "@angular/common": "^9.0.0",
-    "@angular/http": "^7.2.16",
     "@angular/core": "^9.0.0",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
     "flipss-common-types": "^1.0.41",
     "@angular/common": "^9.0.0",
-    "@angular/http": "^7.2.16",
     "@angular/core": "^9.0.0"
   }
 }
