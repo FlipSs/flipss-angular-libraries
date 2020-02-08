@@ -4,12 +4,13 @@
 
 // models
 export * from './lib/models/IComponentRouter';
-
-// components
-export * from './lib/components/RoutableComponent';
+export * from './lib/models/ComponentKey';
+export * from './lib/models/IComponentKey';
+export * from './lib/models/IComponentRouteMetadata';
+export * from './lib/models/ComponentRouteMetadata';
 
 // services
-export * from './lib/services/ComponentRouter';
+export * from './lib/internal/ComponentRouter';
 
 // modules
 export * from './lib/modules/ComponentRouterModule';

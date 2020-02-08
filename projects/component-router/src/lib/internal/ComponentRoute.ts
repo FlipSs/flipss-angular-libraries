@@ -1,34 +1,32 @@
 import {IComponentRoute} from './IComponentRoute';
-import {Params, Route} from '@angular/router';
-import {Argument, Set, TypeUtils} from 'flipss-common-types';
+import {Argument, TypeUtils} from 'flipss-common-types';
+import {IComponentKey} from "../models/IComponentKey";
+import {ComponentParams} from "../models/IComponentRouter";
 
 export class ComponentRoute implements IComponentRoute {
   private readonly _routeCommands: string[];
   private readonly _parentRouteCommands: string[];
 
-  public constructor(route: Route,
+  public constructor(key: IComponentKey<any>,
                      parentRouteCommands?: string[]) {
-    Argument.isNotNullOrUndefined(route, 'route');
+    Argument.isNotNullOrUndefined(key, 'key');
 
-    this._routeCommands = route.path.split('/');
+    this._routeCommands = key.path.split('/');
     this._parentRouteCommands = parentRouteCommands || [];
   }
 
-  public getRouteCommands(routeParams?: Params): string[] {
+  public getRouteCommands(routeParams?: ComponentParams<any>): string[] {
     let commands = this._routeCommands;
     if (!TypeUtils.isNullOrUndefined(routeParams)) {
-      const replacedCommandIndices = new Set<number>();
-      Object.keys(routeParams).forEach(p => {
-        commands = commands.map((c, i) => {
-          if (!replacedCommandIndices.has(i) && c === `:${p}`) {
-            replacedCommandIndices.tryAdd(i);
-
-            return routeParams[p];
+      for (const key of Object.keys(routeParams)) {
+        commands = commands.map(command => {
+          if (command === `:${key}`) {
+            return routeParams[key];
           }
 
-          return c;
+          return command;
         });
-      });
+      }
     }
 
     return [...this._parentRouteCommands, ...commands];
