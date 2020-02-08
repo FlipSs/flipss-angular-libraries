@@ -20,21 +20,19 @@
     "angular",
     "routes"
   ],
-  "dependencies": {
+  "peerDependencies": {
+    "flipss-common-types": "^1.0.42",
+    "@angular/router": "^9.0.0",
+    "@angular/common": "^9.0.0",
+    "@angular/core": "^9.0.0",
     "tslib": "^1.10.0"
   },
-  "peerDependencies": {
-    "flipss-common-types": "^1.0.38",
-    "@angular/router": "^8.2.14",
-    "@angular/common": "^8.2.14",
-    "@angular/core": "^8.2.14"
-  },
   "devDependencies": {
-    "flipss-common-types": "^1.0.38",
-    "@angular/platform-browser": "^8.2.14",
-    "@angular/router": "^8.2.14",
-    "@angular/common": "^8.2.14",
-    "@angular/core": "^8.2.14",
+    "flipss-common-types": "^1.0.42",
+    "@angular/platform-browser": "^9.0.0",
+    "@angular/router": "^9.0.0",
+    "@angular/common": "^9.0.0",
+    "@angular/core": "^9.0.0",
     "zone.js": "^0.10.2"
   }
 }

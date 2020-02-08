@@ -24,7 +24,7 @@ describe('IComponentRouter', () => {
   }));
 
   it('should be created', () => {
-    const componentRouter: IComponentRouter = TestBed.get(COMPONENT_ROUTER);
+    const componentRouter: IComponentRouter = TestBed.inject(COMPONENT_ROUTER);
     expect(componentRouter).toBeTruthy();
   });
 
@@ -43,9 +43,9 @@ describe('IComponentRouter', () => {
     }
 
     beforeAll(() => {
-      componentRouter = TestBed.get(COMPONENT_ROUTER);
-      router = TestBed.get(Router);
-      activatedRoute = TestBed.get(ActivatedRoute);
+      componentRouter = TestBed.inject(COMPONENT_ROUTER);
+      router = TestBed.inject(Router);
+      activatedRoute = TestBed.inject(ActivatedRoute);
     });
 
     it('Should get correct route', () => {

@@ -274,7 +274,45 @@
           }
         }
       }
+    },
+    "dynamic-components": {
+      "projectType": "library",
+      "root": "projects/dynamic-components",
+      "sourceRoot": "projects/dynamic-components/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/dynamic-components/tsconfig.lib.json",
+            "project": "projects/dynamic-components/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/dynamic-components/src/test.ts",
+            "tsConfig": "projects/dynamic-components/tsconfig.spec.json",
+            "karmaConfig": "projects/dynamic-components/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/dynamic-components/tsconfig.lib.json",
+              "projects/dynamic-components/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
-  "defaultProject": "flipss-angular-libraries"
+  "defaultProject": "flipss-angular-libraries",
+  "cli": {
+    "analytics": false
+  }
 }

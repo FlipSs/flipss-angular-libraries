@@ -25,15 +25,15 @@ describe('LoadingService', () => {
         LoadingServiceTestComponent
       ],
       imports: [
-        LoadingServiceModule.forRoot(TestLoadingService, LoadingServiceTestComponent)
+        LoadingServiceModule.forRoot(TestLoadingService)
       ]
     }).compileComponents();
 
-    loadingService = TestBed.get(LOADING_SERVICE);
+    loadingService = TestBed.inject(LOADING_SERVICE);
   }));
 
   it('Should be shown while promise executing', async () => {
-    let promiseResolve: Action<void>;
+    let promiseResolve: Action;
     const promise = new Promise<void>(resolve => {
       promiseResolve = resolve;
     });
@@ -48,7 +48,7 @@ describe('LoadingService', () => {
   });
 
   it('Should be shown when at least one promise executing', async () => {
-    const resolves: Action<void>[] = [];
+    const resolves: Action[] = [];
     for (let i = 0; i < 5; i++) {
       const promise = new Promise<void>(resolve => {
         resolves.push(resolve);

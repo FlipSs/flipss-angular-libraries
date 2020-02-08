@@ -1,9 +1,9 @@
 import {ApplicationRef, ComponentFactoryResolver, Injectable, Injector} from '@angular/core';
 import {ALERT_DATA, IAlertService} from '../models/IAlertService';
 import {AlertComponent} from '../components/AlertComponent';
-import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
 import {PortalService} from './PortalService';
 import {Action, TypeUtils} from 'flipss-common-types';
+import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
 
 @Injectable()
 export class AlertService extends PortalService implements IAlertService {
@@ -31,7 +31,7 @@ export class AlertService extends PortalService implements IAlertService {
   }
 
   private showInternal<T extends AlertComponent<any, any>>(portal: ComponentPortal<T>): T {
-    const instance = this.attach(portal);
+    const instance = this.attach<T>(portal);
     if (!TypeUtils.isNullOrUndefined(instance) && !TypeUtils.isNullOrUndefined(instance.hidePromise)) {
       instance.hidePromise.then(() => {
         this.detach();

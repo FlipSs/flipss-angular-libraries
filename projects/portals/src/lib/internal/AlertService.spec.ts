@@ -28,14 +28,11 @@ describe('AlertService', () => {
         SecondTestComponent
       ],
       imports: [
-        AlertServiceModule.forRoot([
-          FirstTestComponent,
-          SecondTestComponent
-        ])
+        AlertServiceModule.forRoot()
       ]
     }).compileComponents();
 
-    alertService = TestBed.get(ALERT_SERVICE);
+    alertService = TestBed.inject(ALERT_SERVICE);
   }));
 
   it('Should show first component', async () => {

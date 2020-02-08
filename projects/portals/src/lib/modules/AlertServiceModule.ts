@@ -1,8 +1,7 @@
-import {ANALYZE_FOR_ENTRY_COMPONENTS, ModuleWithProviders, NgModule, Type} from '@angular/core';
-import {PortalModule} from '@angular/cdk/portal';
-import {AlertComponent} from '../components/AlertComponent';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {ALERT_SERVICE} from '../models/IAlertService';
 import {AlertService} from '../internal/AlertService';
+import {PortalModule} from '@angular/cdk/portal';
 
 @NgModule({
   imports: [
@@ -10,15 +9,10 @@ import {AlertService} from '../internal/AlertService';
   ]
 })
 export class AlertServiceModule {
-  public static forRoot(componentTypes: Type<AlertComponent<any, any>>[]): ModuleWithProviders<AlertServiceModule> {
+  public static forRoot(): ModuleWithProviders<AlertServiceModule> {
     return {
       ngModule: AlertServiceModule,
       providers: [
-        {
-          provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-          useValue: componentTypes,
-          multi: true
-        },
         {
           provide: ALERT_SERVICE,
           useClass: AlertService

@@ -7,7 +7,7 @@ import {Injectable} from '@angular/core';
 describe('AppInitializerModule', () => {
   function shouldBeCreated(): void {
     it('should be created', () => {
-      expect(TestBed.get(APP_INITIALIZER)).toBeTruthy();
+      expect(TestBed.inject(APP_INITIALIZER)).toBeTruthy();
     });
   }
 

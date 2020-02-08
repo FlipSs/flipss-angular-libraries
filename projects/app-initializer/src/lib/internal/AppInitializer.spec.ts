@@ -26,7 +26,7 @@ describe('AppInitializer', () => {
 
   function checkTypeInitializationOrder(): void {
     it('Types should initialize in correct order', async () => {
-      const tokenSpies = getTokens().map(t => spyOn(TestBed.get(t.value), 'initializeAsync'));
+      const tokenSpies = getTokens().map(t => spyOn(TestBed.inject(t.value), 'initializeAsync'));
 
       await getAppInitializer().initializeAppAsync();
 
@@ -44,7 +44,7 @@ describe('AppInitializer', () => {
   }
 
   function getAppInitializer(): IAppInitializer {
-    return TestBed.get(APP_INITIALIZER);
+    return TestBed.inject(APP_INITIALIZER);
   }
 
   function waitForAppInitialization(): Promise<void> {
@@ -83,11 +83,11 @@ describe('AppInitializer', () => {
     });
 
     it('Should call error listener', async () => {
-      const errorListener: IAppInitializerErrorListener = TestBed.get(APP_INITIALIZER_ERROR_LISTENER);
+      const errorListener: IAppInitializerErrorListener = TestBed.inject(APP_INITIALIZER_ERROR_LISTENER);
       const spy = spyOn(errorListener, 'onInitializationError');
 
       await getAppInitializer().initializeAppAsync();
-      expect(spy).toHaveBeenCalledWith(error, TestBed.get(ErrorType));
+      expect(spy).toHaveBeenCalledWith(error, TestBed.inject(ErrorType));
     });
   });
 })

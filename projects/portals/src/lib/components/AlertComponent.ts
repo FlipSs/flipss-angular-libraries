@@ -1,6 +1,6 @@
 import {Action, TypeUtils} from 'flipss-common-types';
 
-export class AlertComponent<TData, TResult> {
+export abstract class AlertComponent<TData, TResult> {
   private readonly _hidePromise: Promise<TResult>;
   private _hideResolve: Action<TResult>;
 

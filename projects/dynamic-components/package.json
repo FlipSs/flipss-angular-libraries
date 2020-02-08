@@ -1,9 +1,9 @@
 {
-  "name": "flipss-portals",
-  "version": "0.0.6",
-  "description": "Provides some different wrappers on angular cdk portals",
+  "name": "flipss-dynamic-components",
+  "version": "0.0.1",
+  "description": "Provides utilities to create dynamic components",
   "scripts": {
-    "npm-publish": "ng test portals --watch=false && npm version patch && ng build portals && cd ../../dist/portals && npm publish"
+    "npm-publish": "ng test dynamic-components --watch=false && npm version patch && ng build dynamic-components && cd ../../dist/dynamic-components && npm publish"
   },
   "repository": {
     "type": "git",
@@ -14,22 +14,21 @@
   "bugs": {
     "url": "https://github.com/FlipSs/flipss-angular-libraries/issues"
   },
-  "homepage": "https://github.com/FlipSs/flipss-angular-libraries/tree/master/projects/portals#readme",
+  "homepage": "https://github.com/FlipSs/flipss-angular-libraries/tree/master/projects/dynamic-components#readme",
   "keywords": [
     "flipss",
     "angular",
-    "portals"
+    "dynamic",
+    "components"
   ],
   "peerDependencies": {
     "flipss-common-types": "^1.0.42",
-    "@angular/common": "^9.0.0",
-    "@angular/cdk": "^9.0.0",
     "@angular/core": "^9.0.0",
+    "@angular/common": "^9.0.0",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
     "flipss-common-types": "^1.0.42",
-    "@angular/cdk": "^9.0.0",
     "@angular/common": "^9.0.0",
     "@angular/core": "^9.0.0"
   }

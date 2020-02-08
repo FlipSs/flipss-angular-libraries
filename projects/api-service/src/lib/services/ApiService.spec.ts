@@ -19,8 +19,8 @@ describe('ApiService', () => {
       ]
     });
 
-    apiService = new TestApiService(TestBed.get(HttpClient));
-    backend = TestBed.get(HttpTestingController);
+    apiService = new TestApiService(TestBed.inject(HttpClient));
+    backend = TestBed.inject(HttpTestingController);
   });
 
   it('Should make get request', () => {

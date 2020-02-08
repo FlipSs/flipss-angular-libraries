@@ -49,6 +49,12 @@
       ],
       "portals/*": [
         "dist/portals/*"
+      ],
+      "dynamic-components": [
+        "dist/dynamic-components"
+      ],
+      "dynamic-components/*": [
+        "dist/dynamic-components/*"
       ]
     }
   }
