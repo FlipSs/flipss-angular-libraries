@@ -17,20 +17,20 @@ export class AlertService extends PortalService implements IAlertService {
     this._alertResolveQueue = [];
   }
 
-  public show<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData): Promise<T> {
+  public showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData): Promise<T> {
     const portal = new ComponentPortal<T>(component, null, this.createInjector(data));
 
     if (this.hasAttached()) {
       return new Promise<T>(resolve => this._alertResolveQueue.push(() => {
-        const componentInstance = this.showInternal<T>(portal);
+        const componentInstance = this.show<T>(portal);
         resolve(componentInstance);
       }));
     }
 
-    return Promise.resolve(this.showInternal<T>(portal));
+    return Promise.resolve(this.show<T>(portal));
   }
 
-  private showInternal<T extends AlertComponent<any, any>>(portal: ComponentPortal<T>): T {
+  private show<T extends AlertComponent<any, any>>(portal: ComponentPortal<T>): T {
     const instance = this.attach<T>(portal);
     if (!TypeUtils.isNullOrUndefined(instance) && !TypeUtils.isNullOrUndefined(instance.hidePromise)) {
       instance.hidePromise.then(() => {

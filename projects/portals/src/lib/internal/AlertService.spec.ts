@@ -36,7 +36,7 @@ describe('AlertService', () => {
   }));
 
   it('Should show first component', async () => {
-    const alert = await alertService.show<FirstTestComponent, void>(FirstTestComponent);
+    const alert = await alertService.showAsync<FirstTestComponent, void>(FirstTestComponent);
     expect(isFirstShown()).toBeTruthy();
     alert.hide();
     await delay();
@@ -45,7 +45,7 @@ describe('AlertService', () => {
 
   it('Should show second component', async () => {
     const data = 'test';
-    const alert = await alertService.show(SecondTestComponent, data);
+    const alert = await alertService.showAsync(SecondTestComponent, data);
     expect(isSecondShown()).toBeTruthy();
     expect(alert.data).toEqual(data);
 
@@ -55,8 +55,8 @@ describe('AlertService', () => {
   });
 
   it('Should enqueue component if another already shown', async () => {
-    const firstAlertComponent = await alertService.show<FirstTestComponent, void>(FirstTestComponent);
-    const secondAlertPromise = alertService.show(SecondTestComponent);
+    const firstAlertComponent = await alertService.showAsync<FirstTestComponent, void>(FirstTestComponent);
+    const secondAlertPromise = alertService.showAsync(SecondTestComponent);
     expect(isFirstShown()).toBeTruthy();
     expect(isSecondShown()).toBeFalsy();
 
