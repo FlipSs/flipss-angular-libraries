@@ -4,9 +4,10 @@
 
 // modules
 export * from './lib/modules/DynamicComponentModule';
+export * from "./lib/modules/DynamicComponentHostDirectiveModule";
 
 //directives
-export * from './lib/directives/dynamic-component-host.directive';
+export * from './lib/directives/DynamicComponentHostDirective';
 
 //models
 export * from './lib/models/IDynamicComponentFactory';

@@ -1,13 +1,14 @@
 import {TestBed} from "@angular/core/testing";
 import {DynamicComponentModule} from "../modules/DynamicComponentModule";
 import {Component, Inject, Injectable, Type, ViewChild} from "@angular/core";
-import {DynamicComponentHostDirective} from "../directives/dynamic-component-host.directive";
+import {DynamicComponentHostDirective} from "../directives/DynamicComponentHostDirective";
 import {
   DYNAMIC_COMPONENT_FACTORY_PROVIDER,
   IDynamicComponentFactoryProvider
 } from "../models/IDynamicComponentFactoryProvider";
 import {IDynamicComponentMetadata} from "../models/IDynamicComponentMetadata";
 import {Argument} from "flipss-common-types";
+import {DynamicComponentHostDirectiveModule} from "../modules/DynamicComponentHostDirectiveModule";
 
 describe('IDynamicComponentFactory', () => {
   beforeEach(() => TestBed.configureTestingModule({
@@ -15,7 +16,8 @@ describe('IDynamicComponentFactory', () => {
       Metadata
     ],
     imports: [
-      DynamicComponentModule.forRoot()
+      DynamicComponentModule.forRoot(),
+      DynamicComponentHostDirectiveModule
     ],
     declarations: [
       TestComponent,
