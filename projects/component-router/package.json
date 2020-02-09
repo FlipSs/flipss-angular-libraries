@@ -1,6 +1,6 @@
 {
   "name": "flipss-component-router",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Provides service that help avoid using of 'raw' routes",
   "scripts": {
     "npm-publish": "ng test component-router --watch=false && npm version patch && ng build component-router && cd ../../dist/component-router && npm publish"

@@ -11,7 +11,7 @@ export class ComponentRoute implements IComponentRoute {
                      parentRouteCommands?: string[]) {
     Argument.isNotNullOrUndefined(key, 'key');
 
-    this._routeCommands = key.path.split('/');
+    this._routeCommands = key.path.split('/').filter(p => p.length > 0);
     this._parentRouteCommands = parentRouteCommands || [];
   }
 
