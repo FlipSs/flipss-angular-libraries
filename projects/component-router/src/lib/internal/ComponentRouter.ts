@@ -1,6 +1,6 @@
 import {Inject, Injectable, InjectionToken, NgZone} from '@angular/core';
-import {Params, Router} from '@angular/router';
-import {ComponentParams, IComponentRouter} from '../models/IComponentRouter';
+import {Router} from '@angular/router';
+import {ComponentParams, IComponentRouter, IQueryParams} from '../models/IComponentRouter';
 import {IComponentRoute} from './IComponentRoute';
 import {ComponentRoute} from './ComponentRoute';
 import {Argument, Dictionary, IDictionary, IReadOnlyDictionary, TypeUtils} from 'flipss-common-types';
@@ -36,7 +36,7 @@ export class ComponentRouter implements IComponentRouter {
     }
   }
 
-  public navigateToAsync<TParams>(target: IComponentKey<TParams>, routeParams?: ComponentParams<TParams>, queryParams?: Params): Promise<boolean> {
+  public navigateToAsync<TParams>(target: IComponentKey<TParams>, routeParams?: ComponentParams<TParams>, queryParams?: IQueryParams): Promise<boolean> {
     Argument.isNotNullOrUndefined(target, 'target');
 
     const url = this.getUrl(target, routeParams, queryParams);
@@ -44,7 +44,7 @@ export class ComponentRouter implements IComponentRouter {
     return this.navigateInternalAsync(url);
   }
 
-  public getUrlFor<TParams>(target: IComponentKey<TParams>, routeParams?: ComponentParams<TParams>, queryParams?: Params): string {
+  public getUrlFor<TParams>(target: IComponentKey<TParams>, routeParams?: ComponentParams<TParams>, queryParams?: IQueryParams): string {
     Argument.isNotNullOrUndefined(target, 'target');
 
     return this.getUrl(target, routeParams, queryParams);
@@ -60,13 +60,14 @@ export class ComponentRouter implements IComponentRouter {
     return this._ngZone.run(() => this._router.navigateByUrl(url));
   }
 
-  private getUrl(target: IComponentKey<any>, routeParams?: any, queryParams?: Params): string {
+  private getUrl(target: IComponentKey<any>, routeParams?: any, queryParams?: IQueryParams): string {
     this.ensureTargetIsRegistered(target);
 
     const route = this._routes.get(target);
 
     return this._router.createUrlTree(route.getRouteCommands(routeParams), {
-      queryParams
+      queryParams: queryParams && queryParams.value,
+      queryParamsHandling: queryParams && queryParams.handling
     }).toString();
   }
 
