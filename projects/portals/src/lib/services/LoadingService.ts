@@ -17,7 +17,7 @@ export abstract class LoadingService<TComponent> extends PortalService implement
     this._shownCount = 0;
   }
 
-  public showUntil(promise: Promise<void>): void {
+  public showUntil(promise: Promise<any>): void {
     Argument.isNotNullOrUndefined(promise, 'promise');
 
     if (!this.hasAttached()) {
