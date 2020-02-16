@@ -1,4 +1,4 @@
-import {ApplicationRef, ComponentFactoryResolver, Injectable, Injector} from '@angular/core';
+import {ApplicationRef, ComponentFactoryResolver, Injectable, Injector, NgModuleRef} from '@angular/core';
 import {ALERT_DATA, IAlertService} from '../models/IAlertService';
 import {AlertComponent} from '../components/AlertComponent';
 import {PortalService} from './PortalService';
@@ -17,8 +17,8 @@ export class AlertService extends PortalService implements IAlertService {
     this._alertResolveQueue = [];
   }
 
-  public showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData, injector?: Injector): Promise<T> {
-    const portal = new ComponentPortal<T>(component, null, this.createInjector(data, injector));
+  public showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData, moduleRef?: NgModuleRef<any>): Promise<T> {
+    const portal = new ComponentPortal<T>(component, null, this.createInjector(data, moduleRef), moduleRef && moduleRef.componentFactoryResolver);
 
     if (this.hasAttached()) {
       return new Promise<T>(resolve => this._alertResolveQueue.push(() => {
@@ -45,12 +45,12 @@ export class AlertService extends PortalService implements IAlertService {
     return instance;
   }
 
-  private createInjector(data?: any, injector?: Injector): Injector | null {
+  private createInjector(data?: any, moduleRef?: NgModuleRef<any>): Injector {
     const tokens = new WeakMap();
     if (!TypeUtils.isNullOrUndefined(data)) {
       tokens.set(ALERT_DATA, data);
     }
 
-    return new PortalInjector(injector || this.serviceInjector, tokens);
+    return new PortalInjector(moduleRef && moduleRef.injector || this.serviceInjector, tokens);
   }
 }
