@@ -17,8 +17,8 @@ export class AlertService extends PortalService implements IAlertService {
     this._alertResolveQueue = [];
   }
 
-  public showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData): Promise<T> {
-    const portal = new ComponentPortal<T>(component, null, this.createInjector(data));
+  public showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData, injector?: Injector): Promise<T> {
+    const portal = new ComponentPortal<T>(component, null, this.createInjector(data, injector));
 
     if (this.hasAttached()) {
       return new Promise<T>(resolve => this._alertResolveQueue.push(() => {
@@ -45,11 +45,12 @@ export class AlertService extends PortalService implements IAlertService {
     return instance;
   }
 
-  private createInjector(data?: any): Injector | null {
-    if (data == null) {
-      return null;
+  private createInjector(data?: any, injector?: Injector): Injector | null {
+    const tokens = new WeakMap();
+    if (!TypeUtils.isNullOrUndefined(data)) {
+      tokens.set(ALERT_DATA, data);
     }
 
-    return new PortalInjector(this.serviceInjector, new WeakMap().set(ALERT_DATA, data));
+    return new PortalInjector(injector || this.serviceInjector, tokens);
   }
 }

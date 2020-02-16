@@ -1,9 +1,9 @@
 import {AlertComponent} from '../components/AlertComponent';
-import {InjectionToken} from '@angular/core';
+import {InjectionToken, Injector} from '@angular/core';
 import {ComponentType} from '@angular/cdk/overlay';
 
 export interface IAlertService {
-  showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData): Promise<T>;
+  showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData, injector?: Injector): Promise<T>;
 }
 
 export const ALERT_SERVICE = new InjectionToken<IAlertService>('IAlertService');
