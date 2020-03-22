@@ -1,5 +1,5 @@
 import {InjectionToken} from '@angular/core';
-import {Params, QueryParamsHandling} from '@angular/router';
+import {ActivatedRoute, Params, QueryParamsHandling} from '@angular/router';
 import {IComponentKey} from "./IComponentKey";
 
 export interface IComponentRouter {
@@ -8,6 +8,8 @@ export interface IComponentRouter {
   navigateToAsync<TParams>(target: IComponentKey<TParams>, routeParams?: ComponentParams<TParams>, queryParams?: IQueryParams): Promise<boolean>;
 
   navigateAsync(url: string): Promise<boolean>;
+
+  setQueryParamsAsync(currentRoute: ActivatedRoute, queryParams: IQueryParams): Promise<boolean>;
 }
 
 export type ComponentParams<T> = { [K in keyof T]: T[K] extends string ? T[K] : never };

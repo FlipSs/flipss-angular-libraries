@@ -1,9 +1,9 @@
 import {Inject, Injectable, InjectionToken, NgZone} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ComponentParams, IComponentRouter, IQueryParams} from '../models/IComponentRouter';
 import {IComponentRoute} from './IComponentRoute';
 import {ComponentRoute} from './ComponentRoute';
-import {Argument, Dictionary, IDictionary, IReadOnlyDictionary, TypeUtils} from 'flipss-common-types';
+import {Argument, Dictionary, Func, IDictionary, IReadOnlyDictionary, TypeUtils} from 'flipss-common-types';
 import {IComponentRouteMetadata} from "../models/IComponentRouteMetadata";
 import {IComponentKey} from "../models/IComponentKey";
 
@@ -56,8 +56,23 @@ export class ComponentRouter implements IComponentRouter {
     return this.navigateInternalAsync(url);
   }
 
+  public setQueryParamsAsync(currentRoute: ActivatedRoute, queryParams: IQueryParams): Promise<boolean> {
+    Argument.isNotNullOrUndefined(currentRoute, 'currentRoute');
+    Argument.isNotNullOrUndefined(queryParams, 'queryParams');
+
+    return this.executeRouterActionAsync(r => r.navigate([], {
+      relativeTo: currentRoute,
+      queryParams: queryParams.value,
+      queryParamsHandling: queryParams.handling
+    }))
+  }
+
   private navigateInternalAsync(url: string): Promise<boolean> {
-    return this._ngZone.run(() => this._router.navigateByUrl(url));
+    return this.executeRouterActionAsync(r => r.navigateByUrl(url));
+  }
+
+  private executeRouterActionAsync(action: Func<Promise<boolean>, Router>): Promise<boolean> {
+    return this._ngZone.run(() => action(this._router));
   }
 
   private getUrl(target: IComponentKey<any>, routeParams?: any, queryParams?: IQueryParams): string {

@@ -93,6 +93,20 @@ describe('IComponentRouter', () => {
       const urlTree = router.createUrlTree([TestComponent.routePath].concat(ParameterizedChildTestComponent.getPathCommands(args)));
       equals(router.url, urlTree.toString(), ParameterizedChildTestComponent, true);
     });
+
+    it("Should set query parameters", async () => {
+      const params = {
+        test: 'test'
+      };
+
+      expect(activatedRoute.snapshot.queryParams.test).not.toBeDefined();
+
+      await componentRouter.setQueryParamsAsync(activatedRoute, {
+        value: params
+      });
+
+      expect(activatedRoute.snapshot.queryParams.test).toBe('test');
+    });
   });
 });
 
