@@ -1,6 +1,6 @@
 {
   "name": "flipss-dynamic-components",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Provides utilities to create dynamic components",
   "scripts": {
     "npm-publish": "ng test dynamic-components --watch=false && npm version patch && ng build dynamic-components && cd ../../dist/dynamic-components && npm publish"
@@ -22,14 +22,14 @@
     "components"
   ],
   "peerDependencies": {
-    "flipss-common-types": "^1.0.42",
-    "@angular/core": "^9.0.0",
-    "@angular/common": "^9.0.0",
-    "tslib": "^1.10.0"
+    "flipss-common-types": "^1.0.48",
+    "@angular/core": "^9.1.4",
+    "@angular/common": "^9.1.4",
+    "tslib": "^1.11.1"
   },
   "devDependencies": {
-    "flipss-common-types": "^1.0.42",
-    "@angular/common": "^9.0.0",
-    "@angular/core": "^9.0.0"
+    "flipss-common-types": "^1.0.48",
+    "@angular/common": "^9.1.4",
+    "@angular/core": "^9.1.4"
   }
 }
