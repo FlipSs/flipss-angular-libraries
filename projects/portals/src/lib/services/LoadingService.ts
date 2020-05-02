@@ -26,7 +26,13 @@ export abstract class LoadingService<TComponent> extends PortalService implement
 
     this._shownCount++;
 
-    promise.finally(() => this.hide());
+    promise.then(
+      () => this.hide(),
+      r => {
+        this.hide();
+
+        throw r;
+      });
   }
 
   protected abstract createPortal(): ComponentPortal<TComponent>;
