@@ -1,4 +1,10 @@
-import {APP_INITIALIZER as ANGULAR_APP_INITIALIZER, ModuleWithProviders, NgModule, Type} from '@angular/core';
+import {
+  APP_INITIALIZER as ANGULAR_APP_INITIALIZER,
+  InjectionToken,
+  ModuleWithProviders,
+  NgModule,
+  Type
+} from '@angular/core';
 import {APP_INITIALIZER, IAppInitializer} from '../models/IAppInitializer';
 import {IAppInitializerErrorListener} from '../models/IAppInitializerErrorListener';
 import {IInitializableInjectionToken} from '../models/IInitializableInjectionToken';
@@ -9,6 +15,7 @@ import {APP_INITIALIZER_ERROR_LISTENER, INITIALIZABLE_TOKENS} from "../internal/
 
 @NgModule({
   providers: [
+    AppInitializerEmptyErrorListener,
     {
       provide: ANGULAR_APP_INITIALIZER,
       useFactory: initializeAppAsync,
@@ -28,7 +35,7 @@ export class AppInitializerModule {
   }
 
   public static forRoot(tokens: IInitializableInjectionToken[],
-                        errorListenerType?: Type<IAppInitializerErrorListener>): ModuleWithProviders<AppInitializerModule> {
+                        errorListener?: InjectionToken<IAppInitializerErrorListener> | Type<IAppInitializerErrorListener>): ModuleWithProviders<AppInitializerModule> {
     return {
       ngModule: AppInitializerModule,
       providers: [
@@ -36,7 +43,7 @@ export class AppInitializerModule {
         {provide: APP_INITIALIZER, useClass: AppInitializer},
         {
           provide: APP_INITIALIZER_ERROR_LISTENER,
-          useClass: errorListenerType || AppInitializerEmptyErrorListener
+          useExisting: errorListener || AppInitializerEmptyErrorListener
         }
       ]
     };
