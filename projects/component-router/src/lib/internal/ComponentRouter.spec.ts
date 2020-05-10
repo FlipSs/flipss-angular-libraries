@@ -42,7 +42,7 @@ describe('IComponentRouter', () => {
       expect(isChild ? activatedRoute.firstChild.firstChild.component : activatedRoute.firstChild.component).toEqual(component);
     }
 
-    beforeAll(() => {
+    beforeEach(() => {
       componentRouter = TestBed.inject(COMPONENT_ROUTER);
       router = TestBed.inject(Router);
       activatedRoute = TestBed.inject(ActivatedRoute);
@@ -106,6 +106,27 @@ describe('IComponentRouter', () => {
       });
 
       expect(activatedRoute.snapshot.queryParams.test).toBe('test');
+    });
+
+    it('Should proper define current component', async () => {
+      const args = [(Math.random() * 17).toString()];
+
+      expect(componentRouter.isCurrentComponent(parameterizedChildTestComponentKey, {
+        test: args[0]
+      })).toBeFalsy();
+
+      await componentRouter.navigateToAsync(parameterizedChildTestComponentKey, {
+        test: args[0]
+      });
+
+      expect(componentRouter.isCurrentComponent(parameterizedChildTestComponentKey, {
+        test: args[0]
+      })).toBeTruthy();
+
+
+      expect(componentRouter.isCurrentUrl(componentRouter.getUrlFor(parameterizedChildTestComponentKey, {
+        test: args[0]
+      }))).toBeTruthy();
     });
   });
 });
