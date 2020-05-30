@@ -1,4 +1,5 @@
 import {Action, TypeUtils} from 'flipss-common-types';
+import {AlertComponentWaitingStrategy} from "./AlertComponentWaitingStrategy";
 
 export abstract class AlertComponent<TData, TResult> {
   private readonly _hidePromise: Promise<TResult>;
@@ -8,6 +9,10 @@ export abstract class AlertComponent<TData, TResult> {
     this._hidePromise = new Promise<TResult>((resolve: Action<TResult>) => {
       this._hideResolve = resolve;
     });
+  }
+
+  public get waitingStrategy(): AlertComponentWaitingStrategy {
+    return AlertComponentWaitingStrategy.waitForHide;
   }
 
   public get hidePromise(): Promise<TResult> {

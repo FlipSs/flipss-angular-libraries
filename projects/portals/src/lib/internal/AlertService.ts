@@ -4,10 +4,13 @@ import {AlertComponent} from '../components/AlertComponent';
 import {PortalService} from './PortalService';
 import {Action, TypeUtils} from 'flipss-common-types';
 import {ComponentPortal, ComponentType, PortalInjector} from '@angular/cdk/portal';
+import {AlertComponentWaitingStrategy} from "../components/AlertComponentWaitingStrategy";
 
 @Injectable()
 export class AlertService extends PortalService implements IAlertService {
   private readonly _alertResolveQueue: Action<any>[];
+
+  private _currentComponentWaitingStrategy: AlertComponentWaitingStrategy | null;
 
   public constructor(injector: Injector,
                      componentFactoryResolver: ComponentFactoryResolver,
@@ -15,16 +18,21 @@ export class AlertService extends PortalService implements IAlertService {
     super(injector, componentFactoryResolver, appRef);
 
     this._alertResolveQueue = [];
+    this._currentComponentWaitingStrategy = null;
   }
 
   public showAsync<T extends AlertComponent<TData, any>, TData>(component: ComponentType<T>, data?: TData, moduleRef?: NgModuleRef<any>): Promise<T> {
     const portal = new ComponentPortal<T>(component, null, this.createInjector(data, moduleRef), moduleRef && moduleRef.componentFactoryResolver);
 
     if (this.hasAttached()) {
-      return new Promise<T>(resolve => this._alertResolveQueue.push(() => {
-        const componentInstance = this.show<T>(portal);
-        resolve(componentInstance);
-      }));
+      if (this._currentComponentWaitingStrategy != AlertComponentWaitingStrategy.none) {
+        return new Promise<T>(resolve => this._alertResolveQueue.push(() => {
+          const componentInstance = this.show<T>(portal);
+          resolve(componentInstance);
+        }));
+      }
+
+      this.detach();
     }
 
     return Promise.resolve(this.show<T>(portal));
@@ -40,6 +48,8 @@ export class AlertService extends PortalService implements IAlertService {
           this._alertResolveQueue.shift()();
         }
       });
+
+      this._currentComponentWaitingStrategy = instance.waitingStrategy;
     }
 
     return instance;

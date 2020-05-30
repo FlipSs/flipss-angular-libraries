@@ -1,6 +1,6 @@
 {
   "name": "flipss-portals",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "description": "Provides some different wrappers on angular cdk portals",
   "scripts": {
     "npm-publish": "ng test portals --watch=false && npm version patch && ng build portals && cd ../../dist/portals && npm publish"

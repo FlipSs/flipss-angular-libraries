@@ -15,3 +15,4 @@ export * from './lib/modules/LoadingServiceModule';
 
 // services
 export * from './lib/services/LoadingService';
+export * from './lib/components/AlertComponentWaitingStrategy';
