@@ -23,12 +23,12 @@
   "peerDependencies": {
     "flipss-common-types": "^1.0.48",
     "@angular/common": "^9.1.4",
-    "@angular/core": "^9.1.4",
+    "@angular/core": "^11.0.5",
     "tslib": "^1.11.1"
   },
   "devDependencies": {
     "flipss-common-types": "^1.0.48",
     "@angular/common": "^9.1.4",
-    "@angular/core": "^9.1.4"
+    "@angular/core": "^11.0.5"
   }
 }
