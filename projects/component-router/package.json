@@ -24,7 +24,7 @@
     "flipss-common-types": "^1.0.48",
     "@angular/router": "^9.1.4",
     "@angular/common": "^9.1.4",
-    "@angular/core": "^9.1.4",
+    "@angular/core": "^11.0.5",
     "tslib": "^1.11.1"
   },
   "devDependencies": {
@@ -32,7 +32,7 @@
     "@angular/platform-browser": "^9.1.4",
     "@angular/router": "^9.1.4",
     "@angular/common": "^9.1.4",
-    "@angular/core": "^9.1.4",
+    "@angular/core": "^11.0.5",
     "zone.js": "^0.10.3"
   }
 }
